@@ -28,7 +28,6 @@ public class PanelDeJuego extends JPanel implements ActionListener {
             }
         });
         tablero = new Tablero(ANCHO,ALTO,1,UNIDAD_TABLERO);
-
         iniciarJuego();
     }
 
@@ -52,12 +51,11 @@ public class PanelDeJuego extends JPanel implements ActionListener {
         Serpiente serpiente = tablero.getSerpiente();
         for(int i = 0; i< serpiente.cuerpo;i++) {
             if(i == 0) {
-                g.setColor(Color.green);
+                g.setColor(Color.GREEN);
                 g.fillRect(serpiente.poscionX[i], serpiente.poscionY[i], UNIDAD_TABLERO,UNIDAD_TABLERO);
-
             }
             else {
-                g.setColor(new Color(45,180,0));
+                g.setColor(Color.CYAN);
                 g.fillRect(serpiente.poscionX[i], serpiente.poscionY[i], UNIDAD_TABLERO,UNIDAD_TABLERO);
             }
         }
@@ -70,11 +68,9 @@ public class PanelDeJuego extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
         tablero.moveSerpiente(direction);
         tablero.serpienteComeAlimento();
         if(tablero.perderJuego()){terminarJuego();}
-
         repaint();
     }
 
@@ -107,7 +103,6 @@ public class PanelDeJuego extends JPanel implements ActionListener {
         }
         tablero.moveSerpiente(direction);
         tablero.serpienteComeAlimento();
-
         repaint();
     }
 }

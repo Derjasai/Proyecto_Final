@@ -1,5 +1,7 @@
 package Aplicacion;
 
+import java.awt.*;
+
 public class Serpiente {
 
     private Tablero tablero;
@@ -8,6 +10,8 @@ public class Serpiente {
     public char direction = 'R';
     public int cuerpo = 3;
     private Sorpresas sorpresaPendiente;
+    public Color colorCabeza;
+    public Color colorCuerpo;
 
     public Serpiente(Tablero tablero){
         int totalidadSerpiente = (tablero.alto/ tablero.UNIDAD_TABLERO)*(tablero.ancho/ tablero.UNIDAD_TABLERO);

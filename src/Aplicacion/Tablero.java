@@ -86,6 +86,19 @@ public class Tablero {
         return serpientes;
     }
 
+    public void setColorSerpiente(Color cabeza, Color cuerpo){
+        this.serpientes.colorCabeza = cabeza;
+        this.serpientes.colorCuerpo = cuerpo;
+    }
+
+    public Color getColorCuerpo(){
+        return serpientes.colorCuerpo;
+    }
+
+    public Color getColorCabeza(){
+        return serpientes.colorCabeza;
+    }
+
     public void serpienteComeAlimento(){
         for (int i = 0; i < 2; i++) {
             if(alimentos[i].x == serpientes.poscionX[0] && alimentos[i].y == serpientes.poscionY[0]){

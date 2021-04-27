@@ -7,7 +7,7 @@ import java.awt.event.*;
 
 public class PanelDeJuego extends JPanel implements ActionListener {
 
-    private Tablero tablero;
+    private final Tablero tablero;
     private Boolean enJuego;
     private static final int ANCHO = 1200;
     private static final int ALTO = 750;

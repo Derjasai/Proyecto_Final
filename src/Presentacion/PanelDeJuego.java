@@ -7,18 +7,19 @@ import java.awt.event.*;
 
 public class PanelDeJuego extends JPanel implements ActionListener {
 
-    private final Tablero tablero;
-    private Boolean enJuego;
+    public static Tablero tablero;
     private static final int ANCHO = 1200;
-    private static final int ALTO = 750;
+    private static int ALTO = 750;
     private static final int UNIDAD_TABLERO = 25;
     private static final int DELAY = 100;
     private Timer timer;
+    private Boolean jugando;
     private char direction = 'R';
 
 
-    public PanelDeJuego(){
-        this.setPreferredSize(new Dimension(ANCHO,ALTO));
+    public PanelDeJuego(Color[] coloresCabeza, Color[] coloresCuerpo, String[] nombres, String[] alimentosAPoner){
+        this.setPreferredSize(new Dimension(ANCHO, ALTO));
+        ALTO -= (UNIDAD_TABLERO * 2);
         this.setBackground(Color.black);
         this.setFocusable(true);
         this.addKeyListener(new KeyAdapter() {
@@ -27,12 +28,11 @@ public class PanelDeJuego extends JPanel implements ActionListener {
                 configurarMovimiento(e);
             }
         });
-        tablero = new Tablero(ANCHO,ALTO,1,UNIDAD_TABLERO);
+        tablero = new Tablero(ANCHO,ALTO,UNIDAD_TABLERO,nombres,coloresCabeza,coloresCuerpo, alimentosAPoner);
         iniciarJuego();
     }
 
     public void iniciarJuego(){
-        enJuego = true;
         timer = new Timer(DELAY,this);
         timer.start();
     }
@@ -43,39 +43,47 @@ public class PanelDeJuego extends JPanel implements ActionListener {
     }
 
     public void draw(Graphics g){
-        for (int i = 0; i < 2; i++) {
-            int[] posicones = tablero.getAlimentoPosicion(i);
-            g.setColor(tablero.getColorAlimento(i));
-            g.fillOval(posicones[0], posicones[1],UNIDAD_TABLERO,UNIDAD_TABLERO);
-        }
-        Serpiente serpiente = tablero.getSerpiente();
-        for(int i = 0; i< serpiente.cuerpo;i++) {
-            if(i == 0) {
-                g.setColor(Color.GREEN);
-                g.fillRect(serpiente.poscionX[i], serpiente.poscionY[i], UNIDAD_TABLERO,UNIDAD_TABLERO);
+        if(jugando){
+            terminarJuego(g);
+        } else{
+            g.setColor(Color.WHITE);
+            g.fillRect(0, ALTO, ANCHO, 50);
+            for (int i = 0; i < 2; i++) {
+                int[] posicones = tablero.getAlimentoPosicion(i);
+                g.setColor(tablero.getColorAlimento(i));
+                g.fillOval(posicones[0], posicones[1],UNIDAD_TABLERO,UNIDAD_TABLERO);
             }
-            else {
-                g.setColor(Color.CYAN);
-                g.fillRect(serpiente.poscionX[i], serpiente.poscionY[i], UNIDAD_TABLERO,UNIDAD_TABLERO);
+            Serpiente serpiente = tablero.getSerpiente();
+            for(int i = 0; i< serpiente.cuerpo;i++) {
+                if(i == 0) {
+                    g.setColor(tablero.getColorCabeza());
+                    g.fillRect(serpiente.poscionX[i], serpiente.poscionY[i], UNIDAD_TABLERO,UNIDAD_TABLERO);
+                }
+                else {
+                    g.setColor(tablero.getColorCuerpo());
+                    g.fillRect(serpiente.poscionX[i], serpiente.poscionY[i], UNIDAD_TABLERO,UNIDAD_TABLERO);
+                }
             }
+            g.setColor(Color.BLACK);
+            g.setFont( new Font("Arial",Font.BOLD, 30));
+            g.drawString(serpiente.nombre+": "+tablero.getPuntuacionSerpiente(), 0, g.getFont().getSize() + ALTO);
         }
     }
 
-    private void terminarJuego(){
+    private void terminarJuego(Graphics g){
         timer.stop();
-        System.out.println("GG");
+        g.setColor(Color.WHITE);
+        g.setFont( new Font("Ink Free",Font.BOLD, 75));
+        FontMetrics metrics2 = getFontMetrics(g.getFont());
+        g.drawString("Game Over", (ANCHO - metrics2.stringWidth("Game Over"))/2, ALTO/2);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         tablero.moveSerpiente(direction);
         tablero.serpienteComeAlimento();
-        if(tablero.perderJuego()){terminarJuego();}
+        jugando = tablero.perderJuego();
         repaint();
-    }
-
-    public void cerrar(){
-        System.exit(0);
     }
 
     private void configurarMovimiento(KeyEvent e){
@@ -101,8 +109,5 @@ public class PanelDeJuego extends JPanel implements ActionListener {
                 }
                 break;
         }
-        tablero.moveSerpiente(direction);
-        tablero.serpienteComeAlimento();
-        repaint();
     }
 }

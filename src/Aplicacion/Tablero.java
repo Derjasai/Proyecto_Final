@@ -4,91 +4,87 @@ import java.awt.*;
 import java.util.*;
 public class Tablero {
 
-    private int jugadores;
-    public final int UNIDAD_TABLERO;
-    public int ancho, alto;
+    private String[] jugadores;
+    private final int UNIDAD_TABLERO;
+    private final int ancho,alto;
     private Serpiente serpientes;
-    private Alimento[] alimentos;
+    private String[] alimentosTotales;
+    private Alimento[] alimentosEnJuego;
     private Random random;
     private java.util.Timer timerObjetos;
 
-    public Tablero(int ancho, int alto, int jugdores, int unidadTablero) {
+    public Tablero(int ancho, int alto, int unidadTablero, String[] jugdores, Color[] coloresCabezaSerpientes, Color[] coloresCuerpoSerpiestes, String[] alimentosAPoner) {
         random = new Random();
         this.jugadores = jugdores;
         this.alto = alto;
         this.ancho = ancho;
-        alimentos = new Alimento[2];
         this.UNIDAD_TABLERO = unidadTablero;
-        serpientes = new Serpiente(this);
+        alimentosTotales = alimentosAPoner;
+        alimentosEnJuego = new Alimento[2];
+        serpientes = new Serpiente(UNIDAD_TABLERO,ancho,alto,jugdores[0],coloresCabezaSerpientes[0],coloresCuerpoSerpiestes[0]);
         colorcarAlimentos();
         timerObjetos = new Timer();
-        timerObjetos.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 2; i++) {
-                    cambiarPosiconAlimento(i);
-                }
-            }
-        }, 5000,5000);
     }
 
-    public Boolean confirmarPosicionAlimentos(int i){
+    private Boolean confirmarPosicionAlimentos(int i){
             for (int j = serpientes.cuerpo; j > 0;j--) {
-                if(alimentos[i].x == serpientes.poscionX[j] && alimentos[i].y == serpientes.poscionY[j]){return true;}
+                if(alimentosEnJuego[i].x == serpientes.poscionX[j] && alimentosEnJuego[i].y == serpientes.poscionY[j]){
+                    if(alimentosEnJuego[0].x != alimentosEnJuego[1].x && alimentosEnJuego[0].y != alimentosEnJuego[1].y)
+                    {return true;}
+                    }
             }
-
         return false;
     }
 
-    public Alimento alimentoAleatorio() {
-        switch (random.nextInt(3)) {
-            case 0 -> {
-                return new Manzana(this);
+    private Alimento alimentoAleatorio() {
+        switch (alimentosTotales[random.nextInt(alimentosTotales.length)]){
+            case "Manzana" -> {
+                return new Manzana(UNIDAD_TABLERO, ancho, alto);
             }
-            case 1 -> {
-                return new ManzanaArcoiris(this);
+            case "Manzana Arcoiris" -> {
+                return new ManzanaArcoiris(UNIDAD_TABLERO, ancho, alto);
             }
-            case 2 -> {
-                return new Dulce(this);
+            case "Dulce" -> {
+                return new Dulce(UNIDAD_TABLERO, ancho, alto);
             }
-            default -> {
-                return new Veneno(this);
+            case "Veneno" -> {
+                return new Veneno(UNIDAD_TABLERO, ancho, alto);
             }
+            default -> {return  alimentoAleatorio();}
         }
     }
 
-    public void colorcarAlimentos() {
+    private void colorcarAlimentos() {
         for (int i = 0; i < 2; i++) {
-            alimentos[i] = alimentoAleatorio();
+            alimentosEnJuego[i] = alimentoAleatorio();
         }
     }
 
     public int[] getAlimentoPosicion ( int numeroAlimento){
-        return new int[]{alimentos[numeroAlimento].x, alimentos[numeroAlimento].y};
+        return new int[]{alimentosEnJuego[numeroAlimento].x, alimentosEnJuego[numeroAlimento].y};
     }
 
-    public void cambiarPosiconAlimento(int i){
-        alimentos[i].cambiarPosicion();
+    private void cambiarPosiconAlimento(int i){
+        alimentosEnJuego[i].cambiarPosicion();
         while(confirmarPosicionAlimentos(i)){
-            alimentos[i].cambiarPosicion();
+            alimentosEnJuego[i].cambiarPosicion();
         }
     }
 
     public void moveSerpiente(char direccion){
-        serpientes.setDirection(direccion);
+        serpientes.mover(direccion);
     }
 
     public Color getColorAlimento(int i){
-        return alimentos[i].getColor();
+        return alimentosEnJuego[i].getColor();
     }
 
     public Serpiente getSerpiente(){
         return serpientes;
     }
 
-    public void setColorSerpiente(Color cabeza, Color cuerpo){
-        this.serpientes.colorCabeza = cabeza;
-        this.serpientes.colorCuerpo = cuerpo;
+    public int getPuntuacionSerpiente(){
+        return serpientes.getPuntuacion();
     }
 
     public Color getColorCuerpo(){
@@ -101,9 +97,9 @@ public class Tablero {
 
     public void serpienteComeAlimento(){
         for (int i = 0; i < 2; i++) {
-            if(alimentos[i].x == serpientes.poscionX[0] && alimentos[i].y == serpientes.poscionY[0]){
-                serpientes.cuerpo += alimentos[i].incremento;
-                alimentos[i] = alimentoAleatorio();
+            if(alimentosEnJuego[i].x == serpientes.poscionX[0] && alimentosEnJuego[i].y == serpientes.poscionY[0]){
+                serpientes.cuerpo += alimentosEnJuego[i].incremento;
+                alimentosEnJuego[i] = alimentoAleatorio();
                 cambiarPosiconAlimento(i);
             }
         }

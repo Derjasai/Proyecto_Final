@@ -7,16 +7,22 @@ import java.awt.event.*;
 
 public class PanelDeJuego extends JPanel implements ActionListener {
 
-    public static Tablero tablero;
-    private static final int ANCHO = 1200;
-    private static int ALTO = 750;
-    private static final int UNIDAD_TABLERO = 25;
-    private static final int DELAY = 100;
+    private final Tablero tablero;
+    private final int ANCHO = 1200;
+    private int ALTO = 750;
+    private final int UNIDAD_TABLERO = 25;
+    private final int DELAY = 100;
     private Timer timer;
     private Boolean jugando;
     private char direction = 'R';
 
-
+    /**
+     * Constructor de la clase
+     * @param coloresCabeza Lista de los colores de las cabezas, maximo dos serpientes
+     * @param coloresCuerpo Lista de los colores de los cuerpos, maximo dos serpientes
+     * @param nombres Lista de los nombres de las serpientes, maximo dos serpientes
+     * @param alimentosAPoner Lista de los alimentos a poner en el tablero
+     */
     public PanelDeJuego(Color[] coloresCabeza, Color[] coloresCuerpo, String[] nombres, String[] alimentosAPoner){
         this.setPreferredSize(new Dimension(ANCHO, ALTO));
         ALTO -= (UNIDAD_TABLERO * 2);
@@ -32,16 +38,27 @@ public class PanelDeJuego extends JPanel implements ActionListener {
         iniciarJuego();
     }
 
+    /**
+     * Inicializa el juego
+     */
     public void iniciarJuego(){
         timer = new Timer(DELAY,this);
         timer.start();
     }
 
+    /**
+     * Funcion para pintar figuras en la pantalla
+     * @param g Graficos
+     */
     public void paint(Graphics g){
         super.paintComponent(g);
         draw(g);
     }
 
+    /**
+     * Decide que clase de figuras dibujar
+     * @param g Graficos
+     */
     public void draw(Graphics g){
         if(jugando){
             terminarJuego(g);
@@ -70,12 +87,16 @@ public class PanelDeJuego extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Muestra la pantalla de finalizacion
+     * @param g Graficos
+     */
     private void terminarJuego(Graphics g){
         timer.stop();
         g.setColor(Color.WHITE);
         g.setFont( new Font("Ink Free",Font.BOLD, 75));
         FontMetrics metrics2 = getFontMetrics(g.getFont());
-        g.drawString("Game Over", (ANCHO - metrics2.stringWidth("Game Over"))/2, ALTO/2);
+        g.drawString("Has Perdido GG", (ANCHO - metrics2.stringWidth("Game Over"))/2, ALTO/2);
     }
 
     @Override
@@ -86,6 +107,10 @@ public class PanelDeJuego extends JPanel implements ActionListener {
         repaint();
     }
 
+    /**
+     * Configura el movimiento de las serpientes en tablero de juego
+     * @param e  Tipo de tecla que se oprime
+     */
     private void configurarMovimiento(KeyEvent e){
         switch(e.getKeyCode()) {
             case KeyEvent.VK_LEFT:

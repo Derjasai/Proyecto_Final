@@ -14,6 +14,15 @@ public class Serpiente {
     public Color colorCabeza;
     public Color colorCuerpo;
 
+    /**
+     * Constructor de la clase serpiente
+     * @param unidadTablero Unidad cuadrada del tablero
+     * @param ancho Ancho del tablero
+     * @param alto Alto del tablero
+     * @param nombre nombre de la serpiente
+     * @param colorCabeza Color de la cabeza
+     * @param colorCuerpo Color del cuerpo
+     */
     public Serpiente(int unidadTablero, int ancho, int alto, String nombre, Color colorCabeza, Color colorCuerpo){
         this.UNIDAD_TABLERO = unidadTablero;
         this.nombre = nombre;
@@ -25,6 +34,10 @@ public class Serpiente {
         poscionX[0] = 0; poscionY[0] = alto - UNIDAD_TABLERO;
     }
 
+    /**
+     * Metodo para cambiar la direccion de la serpiente
+     * @param direction Direccion a la cual cambiar la direccion de la serpiente
+     */
     public void mover(char direction){
         this.direction = direction;
         for(int i = cuerpo+2;i>0;i--) {

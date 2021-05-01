@@ -1,12 +1,9 @@
 package Presentacion;
 
-import Aplicacion.Dulce;
-
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
-public class ConfiguracionSerpiente extends JPanel {
+public class ConfiguracionJuego extends JPanel {
 
     private JColorChooser colorChooser;
     private JTextField campoNombre;
@@ -19,15 +16,21 @@ public class ConfiguracionSerpiente extends JPanel {
     private JPanel menuSeleciones;
     private JFrame ventana;
     private JRadioButton[] alimentos;
-    private ButtonGroup uwu;
 
-    public ConfiguracionSerpiente(JPanel menuSeleciones, JFrame ventana){
+    /**
+     * Constructor de la clase
+     * @param ventana JFrame donde se le añade el JPanel
+     */
+    public ConfiguracionJuego(JFrame ventana){
         this.menuSeleciones = menuSeleciones;
         this.ventana = ventana;
         prepareElementos();
         prepareAcciones();
     }
 
+    /**
+     * Prepare elementos visuales en general
+     */
     private void prepareElementos() {
         alimentos = new JRadioButton[4];
         this.setLayout(new GridLayout(5,1));
@@ -40,6 +43,10 @@ public class ConfiguracionSerpiente extends JPanel {
         this.add(iniciar);
     }
 
+    /**
+     * Prepara los elementos de seleccion de color de la cabeza
+     * @return Retorna el JPanel de seleccion de color de la cabeza
+     */
     private JPanel prepareElementosCabeza(){
         JPanel cabeza = new JPanel();
         this.cabeza = Color.GREEN;
@@ -54,6 +61,10 @@ public class ConfiguracionSerpiente extends JPanel {
         return cabeza;
     }
 
+    /**
+     * Prepara los elementos de seleccion de color del cuerpo
+     * @return Retorna el JPanel de seleccion de color del cuerpo
+     */
     private JPanel prepareElementosCuerpo(){
         JPanel cuerpo = new JPanel();
         this.cuerpo = Color.CYAN;
@@ -68,9 +79,14 @@ public class ConfiguracionSerpiente extends JPanel {
         return cuerpo;
     }
 
+    /**
+     * Prepara los elementos de seleccion de nombre
+     * @return Retorna el JPanel de seleccion de nombre
+     */
     private JPanel prepareElementosNombre(){
         JPanel nombre = new JPanel();
         campoNombre = new JTextField();
+        campoNombre.setText("Player");
         JLabel nombreLabel = new JLabel("Digite el nombre del jugador");
         nombre.setLayout(new FlowLayout());
 
@@ -82,6 +98,10 @@ public class ConfiguracionSerpiente extends JPanel {
         return nombre;
     }
 
+    /**
+     * Prepara los elementos de seleccion de las frutas con las que jugar
+     * @return Retorna el JPanel de seleccion de las frutas con las que jugar
+     */
     private JPanel prepareElementosOpciones(){
         JPanel opciones = new JPanel();
         JRadioButton manzana = new JRadioButton("Manzana", true);
@@ -96,12 +116,18 @@ public class ConfiguracionSerpiente extends JPanel {
         return opciones;
     }
 
+    /**
+     * Prepara las acciones de para seleccionar los colores
+     */
     private void prepareAcciones(){
         cambiarColorCabeza.addActionListener(e->cambiarColorCabeza());
         cambiarColorCuerpo.addActionListener(e->cambiarColorCuerpo());
         iniciar.addActionListener(e->iniciarJuego());
     }
 
+    /**
+     * Funcionalidad para cambiar el color del cuerpo
+     */
     private void cambiarColorCuerpo(){
         colorChooser.setVisible(true);
         Color changeColor = JColorChooser.showDialog(null, "Cambiar de color",cuerpo);
@@ -109,6 +135,9 @@ public class ConfiguracionSerpiente extends JPanel {
         this.colorCuerpo.setBackground(cuerpo);
     }
 
+    /**
+     * Funcionalidad para cambiar el color de la cabeza
+     */
     private void cambiarColorCabeza(){
         colorChooser.setVisible(true);
         Color changeColor = JColorChooser.showDialog(null, "Cambiar de color",cabeza);
@@ -116,6 +145,9 @@ public class ConfiguracionSerpiente extends JPanel {
         this.colorCabeza.setBackground(cabeza);
     }
 
+    /**
+     * Revisa las frutas seleccionadas
+     */
     private String[] getElecciones(){
         int count= 0,apunt=0;
         for (int i = 0; i < 4; i++) {
@@ -129,7 +161,10 @@ public class ConfiguracionSerpiente extends JPanel {
         }
         return elecciones;
     }
-    
+
+    /**
+     * Inicia el juego
+     */
     private void iniciarJuego(){
         this.setVisible(false);
         ventana.add(new PanelDeJuego(new Color[]{cabeza},new Color[]{cuerpo},new String[]{campoNombre.getText()}, getElecciones()));

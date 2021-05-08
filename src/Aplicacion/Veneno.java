@@ -14,4 +14,14 @@ public class Veneno extends Alimento{
         super(unidadTablero,ancho,alto);
         color = Color.GREEN;
     }
+
+    /**
+     * Decide el incremento que da los alimentos al ser comida
+     *
+     * @param compararColor Colores de la serpiente que come el alimento
+     */
+    @Override
+    int incremento(Color[] compararColor) {
+        return 0;
+    }
 }

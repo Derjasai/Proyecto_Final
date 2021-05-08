@@ -9,7 +9,6 @@ abstract class Alimento {
     private final int UNIDAD_TABLERO;
     public int x;
     public int y;
-    public int incremento;
     public Random random = new Random();
     protected Color color;
 
@@ -25,7 +24,6 @@ abstract class Alimento {
         this.alto = alto;
         x = random.nextInt(ancho/ UNIDAD_TABLERO) * UNIDAD_TABLERO;
         y = random.nextInt(alto/ UNIDAD_TABLERO)* UNIDAD_TABLERO;
-        incremento = 0;
     }
 
     /**
@@ -35,6 +33,12 @@ abstract class Alimento {
         x = random.nextInt(ancho/ UNIDAD_TABLERO) * UNIDAD_TABLERO;
         y = random.nextInt(alto/ UNIDAD_TABLERO)* UNIDAD_TABLERO;
     }
+
+    /**
+     * Decide el incremento que da los alimentos al ser comida
+     * @param compararColor Colores de la serpiente que come el alimento
+     */
+    abstract int incremento(Color[] compararColor);
 
     /**
      * Retorna el color del alimento

@@ -42,6 +42,7 @@ public class PanelDeJuego extends JPanel implements ActionListener {
      * Inicializa el juego
      */
     public void iniciarJuego(){
+        jugando = false;
         timer = new Timer(DELAY,this);
         timer.start();
     }

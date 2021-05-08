@@ -161,7 +161,7 @@ public class Tablero {
                 if (alimentosEnJuego[i] instanceof Veneno) {
                     serpientes.cuerpo = 0;
                 }else{
-                    serpientes.cuerpo += alimentosEnJuego[i].incremento;
+                    serpientes.cuerpo += alimentosEnJuego[i].incremento(new Color[] {serpientes.colorCuerpo, serpientes.colorCabeza});
                 }
                 alimentosEnJuego[i] = alimentoAleatorio();
                 cambiarPosiconAlimento(i);

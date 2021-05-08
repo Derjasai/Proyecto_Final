@@ -13,8 +13,18 @@ public class ManzanaArcoiris extends Alimento{
     public ManzanaArcoiris(int unidadTablero, int ancho, int alto){
         super(unidadTablero,ancho,alto);
         color = new Color(random.nextInt(255),random.nextInt(255),random.nextInt(255));
-        incremento = 2;
     }
+
+    /**
+     * Decide el incremento que da los alimentos al ser comida
+     *
+     * @param compararColor Colores de la serpiente que come el alimento
+     */
+    @Override
+    int incremento(Color[] compararColor) {
+        return 3;
+    }
+
 
     @Override
     public Color getColor() {

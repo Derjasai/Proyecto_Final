@@ -49,7 +49,7 @@ public class ConfiguracionJuego extends JPanel {
      */
     private JPanel prepareElementosCabeza(){
         JPanel cabeza = new JPanel();
-        this.cabeza = Color.GREEN;
+        this.cabeza = Color.RED;
         colorCabeza = new JLabel("Color Ejemplo de la Cabeza");
         colorCabeza.setOpaque(true);
         cambiarColorCabeza = new JButton("Cambiar de color");

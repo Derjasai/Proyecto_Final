@@ -1,4 +1,6 @@
 package Aplicacion;
 
-abstract class Sorpresas {
+import java.io.Serializable;
+
+abstract class Sorpresas implements Serializable {
 }

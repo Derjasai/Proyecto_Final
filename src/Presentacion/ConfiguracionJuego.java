@@ -167,7 +167,7 @@ public class ConfiguracionJuego extends JPanel {
      */
     private void iniciarJuego(){
         this.setVisible(false);
-        ventana.add(new PanelDeJuego(new Color[]{cabeza},new Color[]{cuerpo},new String[]{campoNombre.getText()}, getElecciones()));
+        ventana.add(new PanelDeJuego(new Color[]{cabeza},new Color[]{cuerpo},new String[]{campoNombre.getText()}, getElecciones(), ventana));
         ventana.pack();
         ventana.setLocationRelativeTo(null);
     }

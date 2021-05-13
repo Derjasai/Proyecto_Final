@@ -1,8 +1,9 @@
 package Aplicacion;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public class Serpiente {
+public class Serpiente implements Serializable {
 
     private final int UNIDAD_TABLERO;
     public int[] poscionX;
@@ -53,6 +54,6 @@ public class Serpiente {
     }
 
     public int getPuntuacion(){
-        return cuerpo -3;
+        return cuerpo - 3;
     }
 }

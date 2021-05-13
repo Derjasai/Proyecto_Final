@@ -1,9 +1,11 @@
 package Aplicacion;
 
 import java.awt.*;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Random;
 
-abstract class Alimento {
+abstract class Alimento implements Serializable {
 
     private int alto,ancho;
     private final int UNIDAD_TABLERO;

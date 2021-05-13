@@ -1,8 +1,9 @@
 package Aplicacion;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.*;
-public class Tablero {
+public class Tablero implements Serializable {
 
     private String[] jugadores;
     private final int UNIDAD_TABLERO;
@@ -11,7 +12,6 @@ public class Tablero {
     private String[] alimentosTotales;
     private Alimento[] alimentosEnJuego;
     private Random random;
-    private java.util.Timer timerObjetos;
 
     /**
      * Constructor de la clase
@@ -33,21 +33,20 @@ public class Tablero {
         alimentosEnJuego = new Alimento[2];
         serpientes = new Serpiente(UNIDAD_TABLERO,ancho,alto,jugdores[0],coloresCabezaSerpientes[0],coloresCuerpoSerpiestes[0]);
         colorcarAlimentos();
-        timerObjetos = new Timer();
     }
 
     /**
      * Revisa si el alimento fue colocado en un lugar del tablero donde no este el cuerpo de las serpientes ni otro
      * alimento
      * @param i posicion del alimento en la lista
-     * @return Si el alimento esta en una posicion valida en el tablero
+     * @return Si el alimento esta en una posicion invalida en el tablero
      */
     private Boolean confirmarPosicionAlimentos(int i){
-            for (int j = serpientes.cuerpo; j > 0;j--) {
+        if(alimentosEnJuego[0].x == alimentosEnJuego[1].x && alimentosEnJuego[0].y == alimentosEnJuego[1].y){return true;}
+            for (int j = serpientes.cuerpo; j >= 0;j--) {
                 if(alimentosEnJuego[i].x == serpientes.poscionX[j] && alimentosEnJuego[i].y == serpientes.poscionY[j]){
-                    if(alimentosEnJuego[0].x != alimentosEnJuego[1].x && alimentosEnJuego[0].y != alimentosEnJuego[1].y)
-                    {return true;}
-                    }
+                    return true;}
+
             }
         return false;
     }

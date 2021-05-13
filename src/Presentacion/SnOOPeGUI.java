@@ -2,15 +2,21 @@ package Presentacion;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.io.File;
+
+import Aplicacion.Juego;
+import Persistencia.*;
 
 public class SnOOPeGUI extends JFrame{
 
     private JButton unSoloJugador, jugadorVsJugador, jugadorVsMaquina;
     private JPanel principal;
-    private JMenuBar menuBar;
-    private JMenu archivo;
-    private JMenuItem nuevo,abrir,guardarComo,importar,exportar,salir;
+    public JMenuBar menuBar;
+    public JMenu archivo;
+    private JMenuItem nuevo,abrir,salir;
+    public JMenuItem guardarComo;
 
     /**
      *Construsctor de la clase SnOOPeGUI
@@ -43,6 +49,45 @@ public class SnOOPeGUI extends JFrame{
     public void prepareAcciones(){
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         unSoloJugador.addActionListener(e->configuracionJuego());
+        nuevo.addActionListener(e->opcionNuevo());
+        abrir.addActionListener(e->opcionAbrir());
+        guardarComo.setEnabled(false);
+        salir.addActionListener(e -> opcionSalir());
+    }
+
+    /**
+     * Implementa la opcion de abrir
+     */
+    private void opcionAbrir(){
+        try {
+            JFileChooser fileChooser = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Clases de Java (.dat)", "dat");
+            fileChooser.setDialogTitle("Abrir");
+            fileChooser.setFileFilter(filter);
+
+            int seleccion = fileChooser.showOpenDialog(this);
+            if (seleccion == JFileChooser.APPROVE_OPTION) {
+                Juego juego = Juego.abra(fileChooser.getSelectedFile());
+                principal.setVisible(false);
+                this.add(new PanelDeJuego(juego));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }
+
+
+    /**
+     * Limpia y genera un nuevo automata
+     */
+    private void opcionNuevo(){
+    }
+
+    /**
+     * Implementa la opcion de salir
+     */
+    private void opcionSalir(){
+        System.exit(0);
     }
 
     /**
@@ -83,8 +128,6 @@ public class SnOOPeGUI extends JFrame{
         nuevo = new JMenuItem("Nuevo");
         abrir = new JMenuItem("Abrir");
         guardarComo = new JMenuItem("Guardar Como");
-        importar = new JMenuItem("Importar");
-        exportar = new JMenuItem("Exportar");
         salir = new JMenuItem("Salir");
 
         archivo.add(nuevo);
@@ -92,10 +135,8 @@ public class SnOOPeGUI extends JFrame{
         archivo.add(abrir);
         archivo.add(guardarComo);
         archivo.addSeparator();
-        archivo.add(importar);
-        archivo.add(exportar);
-        archivo.addSeparator();
         archivo.add(salir);
+
         menuBar.add(archivo);
         this.setJMenuBar(menuBar);
     }

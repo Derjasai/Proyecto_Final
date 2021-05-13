@@ -4,6 +4,11 @@
     <output url="file://$MODULE_DIR$/bin" />
     <output-test url="file://$MODULE_DIR$/bin" />
     <exclude-output />
+    <javadoc-paths>
+      <root url="file://$MODULE_DIR$/src/Aplicacion" />
+      <root url="file://$MODULE_DIR$/src/Persistencia" />
+      <root url="file://$MODULE_DIR$/src/Presentacion" />
+    </javadoc-paths>
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/bin" />

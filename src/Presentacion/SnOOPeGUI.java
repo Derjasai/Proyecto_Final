@@ -12,7 +12,7 @@ import Persistencia.*;
 public class SnOOPeGUI extends JFrame{
 
     private JButton unSoloJugador, jugadorVsJugador, jugadorVsMaquina;
-    private JPanel principal;
+    public JPanel principal, panelJuego, configuraciones;
     public JMenuBar menuBar;
     public JMenu archivo;
     private JMenuItem nuevo,abrir,salir;
@@ -31,15 +31,17 @@ public class SnOOPeGUI extends JFrame{
      */
     public void prepareElementos(){
         principal = new JPanel();
+        configuraciones = new ConfiguracionJuego(this);
         this.setLayout(new BorderLayout());
         this.setTitle("Snake");
         this.setResizable(false);
-        this.setSize(new Dimension(1200,800));
-        this.setPreferredSize(new Dimension(1200,800));
+        this.setSize(new Dimension(1225,800));
+        this.setPreferredSize(new Dimension(1225,800));
         this.setLocationRelativeTo(null);
 
         prepareElementosEleccion();
         prepareElementosMenu();
+
         this.add(principal, BorderLayout.CENTER);
     }
 
@@ -64,12 +66,15 @@ public class SnOOPeGUI extends JFrame{
             FileNameExtensionFilter filter = new FileNameExtensionFilter("Clases de Java (.dat)", "dat");
             fileChooser.setDialogTitle("Abrir");
             fileChooser.setFileFilter(filter);
-
             int seleccion = fileChooser.showOpenDialog(this);
             if (seleccion == JFileChooser.APPROVE_OPTION) {
                 Juego juego = Juego.abra(fileChooser.getSelectedFile());
                 principal.setVisible(false);
-                this.add(new PanelDeJuego(juego));
+                if(panelJuego != null){panelJuego.setVisible(false);}
+                panelJuego = new PanelDeJuego(juego,this);
+                panelJuego.setVisible(true);
+                this.add(panelJuego);
+
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
@@ -95,7 +100,9 @@ public class SnOOPeGUI extends JFrame{
      */
     private void configuracionJuego(){
         principal.setVisible(false);
-        this.add(new ConfiguracionJuego(this));
+        configuraciones.setVisible(true);
+        this.add(configuraciones);
+        validate();
     }
 
     /**

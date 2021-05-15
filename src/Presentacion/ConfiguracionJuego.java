@@ -14,14 +14,14 @@ public class ConfiguracionJuego extends JPanel {
     private JLabel colorCabeza, colorCuerpo;
     private JButton iniciar;
     private JPanel menuSeleciones;
-    private JFrame ventana;
+    private SnOOPeGUI ventana;
     private JRadioButton[] alimentos;
 
     /**
      * Constructor de la clase
      * @param ventana JFrame donde se le añade el JPanel
      */
-    public ConfiguracionJuego(JFrame ventana){
+    public ConfiguracionJuego(SnOOPeGUI ventana){
         this.menuSeleciones = menuSeleciones;
         this.ventana = ventana;
         prepareElementos();
@@ -36,6 +36,7 @@ public class ConfiguracionJuego extends JPanel {
         this.setLayout(new GridLayout(5,1));
         this.colorChooser = new JColorChooser();
         this.iniciar = new JButton("Iniciar Juego");
+        this.setFocusable(true);
         this.add(prepareElementosCabeza());
         this.add(prepareElementosCuerpo());
         this.add(prepareElementosNombre());
@@ -167,7 +168,8 @@ public class ConfiguracionJuego extends JPanel {
      */
     private void iniciarJuego(){
         this.setVisible(false);
-        ventana.add(new PanelDeJuego(new Color[]{cabeza},new Color[]{cuerpo},new String[]{campoNombre.getText()}, getElecciones(), ventana));
+        ventana.panelJuego = new PanelDeJuego(new Color[]{cabeza},new Color[]{cuerpo},new String[]{campoNombre.getText()}, getElecciones(), ventana);
+        ventana.add(ventana.panelJuego);
         ventana.pack();
         ventana.setLocationRelativeTo(null);
     }

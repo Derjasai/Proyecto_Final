@@ -9,9 +9,9 @@ public class Serpiente implements Serializable {
     public int[] poscionX;
     public int[] poscionY;
     public String nombre;
-    public char direction = 'R';
+    public char direction;
     public int cuerpo = 3;
-    private Sorpresas sorpresaPendiente;
+    public Sorpresas sorpresaPendiente;
     public Color colorCabeza;
     public Color colorCuerpo;
 
@@ -24,7 +24,7 @@ public class Serpiente implements Serializable {
      * @param colorCabeza Color de la cabeza
      * @param colorCuerpo Color del cuerpo
      */
-    public Serpiente(int unidadTablero, int ancho, int alto, String nombre, Color colorCabeza, Color colorCuerpo){
+    public Serpiente(int unidadTablero, int ancho, int alto, String nombre, Color colorCabeza, Color colorCuerpo, int ejeY, int ejeX){
         this.UNIDAD_TABLERO = unidadTablero;
         this.nombre = nombre;
         this.colorCuerpo = colorCuerpo;
@@ -32,19 +32,26 @@ public class Serpiente implements Serializable {
         int totalidadSerpiente = (alto/ UNIDAD_TABLERO)*(ancho/UNIDAD_TABLERO);
         poscionX = new int[totalidadSerpiente];
         poscionY = new int[totalidadSerpiente];
-        poscionX[0] = 0; poscionY[0] = alto - UNIDAD_TABLERO;
+        if(ejeX==0){direction = 'R';}
+        if(ejeY==0){direction = 'L';}
+        for(int i = cuerpo+5;i>=0;i--) {
+            poscionX[i] = ejeX;
+            poscionY[i] = ejeY;
+        }
+    }
+
+    private void ubicarCuerpo(){
+        for(int i = cuerpo+5;i>0;i--) {
+            poscionX[i] = poscionX[i-1];
+            poscionY[i] = poscionY[i-1];
+        }
     }
 
     /**
      * Metodo para cambiar la direccion de la serpiente
-     * @param direction Direccion a la cual cambiar la direccion de la serpiente
      */
-    public void mover(char direction){
-        this.direction = direction;
-        for(int i = cuerpo+2;i>0;i--) {
-            poscionX[i] = poscionX[i-1];
-            poscionY[i] = poscionY[i-1];
-        }
+    public void mover(){
+        ubicarCuerpo();
         switch (direction) {
             case 'U' -> poscionY[0] = poscionY[0] - UNIDAD_TABLERO;
             case 'D' -> poscionY[0] = poscionY[0] + UNIDAD_TABLERO;
@@ -53,7 +60,16 @@ public class Serpiente implements Serializable {
         }
     }
 
+    public void setDirection(char direction){
+        this.direction = direction;
+    }
+
+
     public int getPuntuacion(){
         return cuerpo - 3;
+    }
+
+    public Image sorpresaPendiente(){
+        return sorpresaPendiente.getImage();
     }
 }

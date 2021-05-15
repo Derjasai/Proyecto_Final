@@ -12,7 +12,7 @@ public class ManzanaArcoiris extends Alimento{
      */
     public ManzanaArcoiris(int unidadTablero, int ancho, int alto){
         super(unidadTablero,ancho,alto);
-        color = new Color(random.nextInt(255),random.nextInt(255),random.nextInt(255));
+        color = new Color(Tablero.random.nextInt(255),Tablero.random.nextInt(255),Tablero.random.nextInt(255));
     }
 
     /**
@@ -25,10 +25,9 @@ public class ManzanaArcoiris extends Alimento{
         return 3;
     }
 
-
     @Override
     public Color getColor() {
-        color = new Color(random.nextInt(255),random.nextInt(255),random.nextInt(255));
+        color = new Color(Tablero.random.nextInt(255),Tablero.random.nextInt(255),Tablero.random.nextInt(255));
         return super.getColor();
     }
 }

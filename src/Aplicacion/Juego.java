@@ -26,10 +26,9 @@ public class Juego implements Serializable {
 
     /**
      * Mueve la serpiente
-     * @param direccion Direccion hacia donde moverla
      */
-    public void moveSerpiente(char direccion){
-        tablero.moveSerpiente(direccion);
+    public void moveSerpiente(int i){
+        tablero.moveSerpiente(i);
     }
 
     /**
@@ -45,38 +44,38 @@ public class Juego implements Serializable {
      * Retorna la serpiente
      * @return Retorna la serpiente
      */
-    public Serpiente getSerpiente(){
-        return tablero.getSerpiente();
+    public Serpiente getSerpiente(int i){
+        return tablero.getSerpiente(i);
     }
 
     /**
      * Retorna la puntuacion de la serpiente
      * @return Retorna la puntuacion de la serpiente
      */
-    public int getPuntuacionSerpiente(){
-        return  tablero.getPuntuacionSerpiente();
+    public int getPuntuacionSerpiente(int i){
+        return  tablero.getPuntuacionSerpiente(i);
     }
 
     /**
      * Retorna el color del cuerpo de la serpiente
      * @return Retorna el color del cuerpo de la serpiente
      */
-    public Color getColorCuerpo(){
-        return tablero.getColorCuerpo();
+    public Color getColorCuerpo(int i){
+        return tablero.getColorCuerpo(i);
     }
 
     /**
      * Retorna el color del cuerpo de la serpiente
      * @return Retorna el color de la cabeza de la serpiente
      */
-    public Color getColorCabeza(){
-        return tablero.getColorCabeza();
+    public Color getColorCabeza(int i){
+        return tablero.getColorCabeza(i);
     }
 
     /**
      * Decide si la serpiente "come" un alimento, se le suma lo indicado al cuerpo de la serpiente
      */
-    public void serpienteComeAlimento(){
+    public void serpienteComeAlimento(int i){
         tablero.serpienteComeAlimento();
     }
 
@@ -87,6 +86,24 @@ public class Juego implements Serializable {
     public void perderJuego(){
         perdio = tablero.perderJuego();
     }
+
+    public char getDirection(int i){
+        return tablero.getSerpiente(i).direction;
+    }
+
+    public void cambiarPosAlimentos(){
+        for (int i = 0; i < 2; i++) {
+            tablero.cambiarPosiconAlimento(i);
+        }
+    }
+
+    public int[] getSorpresaPos(){return tablero.getSorpresaPosicion();}
+
+    public Image getImageSorpresa(){return tablero.getSorpresaImage();}
+
+    public void serpienteTomaSorpresa(){tablero.serpienteTomaSopresa();}
+
+    public void serpienteLanzaPoder(int i){tablero.serpienteLanzaPoder(i);}
 
     public void save(File selectedFile) throws JuegoExcepcion {
         Manager.getInstance().save(selectedFile, this);

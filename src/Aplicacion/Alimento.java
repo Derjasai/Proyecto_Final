@@ -2,7 +2,6 @@ package Aplicacion;
 
 import java.awt.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Random;
 
 abstract class Alimento implements Serializable {
@@ -11,7 +10,6 @@ abstract class Alimento implements Serializable {
     private final int UNIDAD_TABLERO;
     public int x;
     public int y;
-    public Random random = new Random();
     protected Color color;
 
     /**
@@ -24,16 +22,16 @@ abstract class Alimento implements Serializable {
         this.UNIDAD_TABLERO = unidadTablero;
         this.ancho = ancho;
         this.alto = alto;
-        x = random.nextInt(ancho/ UNIDAD_TABLERO) * UNIDAD_TABLERO;
-        y = random.nextInt(alto/ UNIDAD_TABLERO)* UNIDAD_TABLERO;
+        x = Tablero.random.nextInt(ancho/ UNIDAD_TABLERO) * UNIDAD_TABLERO;
+        y = Tablero.random.nextInt(alto/ UNIDAD_TABLERO)* UNIDAD_TABLERO;
     }
 
     /**
      * Cambia la posicon x,y del Alimento
      */
     public void cambiarPosicion(){
-        x = random.nextInt(ancho/ UNIDAD_TABLERO) * UNIDAD_TABLERO;
-        y = random.nextInt(alto/ UNIDAD_TABLERO)* UNIDAD_TABLERO;
+        x = Tablero.random.nextInt(ancho/ UNIDAD_TABLERO) * UNIDAD_TABLERO;
+        y = Tablero.random.nextInt(alto/ UNIDAD_TABLERO)* UNIDAD_TABLERO;
     }
 
     /**

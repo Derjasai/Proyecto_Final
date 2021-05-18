@@ -31,12 +31,11 @@ public class SnOOPeGUI extends JFrame{
      */
     public void prepareElementos(){
         principal = new JPanel();
-        configuraciones = new ConfiguracionJuego(this);
         this.setLayout(new BorderLayout());
         this.setTitle("Snake");
         this.setResizable(false);
-        this.setSize(new Dimension(1225,800));
-        this.setPreferredSize(new Dimension(1225,800));
+        this.setSize(new Dimension(1200,800));
+        //this.setPreferredSize(new Dimension(1200,830));
         this.setLocationRelativeTo(null);
 
         prepareElementosEleccion();
@@ -51,6 +50,7 @@ public class SnOOPeGUI extends JFrame{
     public void prepareAcciones(){
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         unSoloJugador.addActionListener(e->configuracionJuego());
+        jugadorVsJugador.addActionListener(e->configuracionJuegoMultiplayer());
         nuevo.addActionListener(e->opcionNuevo());
         abrir.addActionListener(e->opcionAbrir());
         guardarComo.setEnabled(false);
@@ -74,6 +74,8 @@ public class SnOOPeGUI extends JFrame{
                 panelJuego = new PanelDeJuego(juego,this);
                 panelJuego.setVisible(true);
                 this.add(panelJuego);
+                this.pack();
+                this.setLocationRelativeTo(null);
 
             }
         } catch (Exception e) {
@@ -100,6 +102,15 @@ public class SnOOPeGUI extends JFrame{
      */
     private void configuracionJuego(){
         principal.setVisible(false);
+        configuraciones = new ConfiguracionJuego(this);
+        configuraciones.setVisible(true);
+        this.add(configuraciones);
+        validate();
+    }
+
+    private void configuracionJuegoMultiplayer(){
+        principal.setVisible(false);
+        configuraciones = new ConfiguracionJuegoMultiplayer(this);
         configuraciones.setVisible(true);
         this.add(configuraciones);
         validate();

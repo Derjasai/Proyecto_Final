@@ -1,31 +1,12 @@
 package Aplicacion;
 
-import javax.imageio.*;
-import java.awt.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 
-abstract class Sorpresas implements Serializable {
-    public int x,y;
-    private final int UNIDAD_TABLERO,ALTO,ANCHO;
-    public Image image;
+abstract class Sorpresas extends Elemento implements Serializable {
 
-    public Sorpresas(int unidadTablero, int ancho, int alto){
-        UNIDAD_TABLERO = unidadTablero;
-        ALTO = alto;
-        ANCHO = ancho;
-        x = Tablero.random.nextInt(ancho/ UNIDAD_TABLERO) * UNIDAD_TABLERO;
-        y = Tablero.random.nextInt(alto/ UNIDAD_TABLERO)* UNIDAD_TABLERO;
+    public Sorpresas(int unidadTablero, int ancho, int alto, boolean multiplayer){
+        super(unidadTablero,ancho,alto,multiplayer);
     }
-
-    /**
-     * Cambia la posicon x,y del Alimento
-     */
-    public void cambiarPosicion(){
-        x = Tablero.random.nextInt(ANCHO/ UNIDAD_TABLERO) * UNIDAD_TABLERO;
-        y = Tablero.random.nextInt(ALTO/ UNIDAD_TABLERO)* UNIDAD_TABLERO;
-    }
-
-    abstract void lanzar();
-
-    abstract Image getImage();
+    abstract void lanzar(ArrayList<Elemento> elemento, Serpiente[] serpientes, Serpiente serpiente);
 }

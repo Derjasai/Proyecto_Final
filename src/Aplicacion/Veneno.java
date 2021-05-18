@@ -1,6 +1,10 @@
 package Aplicacion;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class Veneno extends Alimento{
 
@@ -10,8 +14,8 @@ public class Veneno extends Alimento{
      * @param ancho Ancho del tablero
      * @param alto Alto del tablero
      */
-    public Veneno(int unidadTablero, int ancho, int alto){
-        super(unidadTablero,ancho,alto);
+    public Veneno(int unidadTablero, int ancho, int alto, boolean multiplayer){
+        super(unidadTablero,ancho,alto,multiplayer);
         color = Color.GREEN;
     }
 
@@ -21,7 +25,17 @@ public class Veneno extends Alimento{
      * @param compararColor Colores de la serpiente que come el alimento
      */
     @Override
-    int incremento(Color[] compararColor) {
-        return 0;
+    void incremento(Color[] compararColor, Serpiente serpiente) {
+        serpiente.muerta = true;
+    }
+
+    public Image getImage(){
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(new File("imgs/veneno.png")); // la carga en una BufferedReade
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return img;
     }
 }

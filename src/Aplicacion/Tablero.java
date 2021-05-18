@@ -10,9 +10,9 @@ public class Tablero implements Serializable {
     private final int ancho,alto;
     private Serpiente[] serpientes;
     private String[] alimentosTotales, sorpresasTotales;
-    private Alimento[] alimentosEnJuego;
-    private Sorpresas sopresa;
+    protected ArrayList<Elemento> elementos;
     static public Random random = new Random();
+    public boolean multiplayer;
 
     /**
      * Constructor de la clase
@@ -24,45 +24,48 @@ public class Tablero implements Serializable {
      * @param coloresCuerpoSerpiestes Lista del color de las cuerpos de las serpientes[], maximo 2
      * @param alimentosAPoner Lista de alimentos para jugar
      */
-    public Tablero(int ancho, int alto, int unidadTablero, String[] jugdores, Color[] coloresCabezaserpientes, Color[] coloresCuerpoSerpiestes, String[] alimentosAPoner) {
+    public Tablero(int ancho, int alto, int unidadTablero, String[] jugdores, Color[] coloresCabezaserpientes, Color[] coloresCuerpoSerpiestes, String[] alimentosAPoner, String[] sorpresasAPoner) {
         random = new Random();
+        multiplayer = jugdores.length == 2;
+
         this.jugadores = jugdores;
         this.alto = alto;
         this.ancho = ancho;
         this.UNIDAD_TABLERO = unidadTablero;
         alimentosTotales = alimentosAPoner;
-        alimentosEnJuego = new Alimento[2];
-        sopresa = new Aumento(unidadTablero,ancho,alto);
-        serpientes = new Serpiente[2];
-        serpientes[0] = new Serpiente(UNIDAD_TABLERO,ancho,alto,jugdores[0],coloresCabezaserpientes[0],coloresCuerpoSerpiestes[0], alto-unidadTablero, 0);
-        serpientes[1] = new Serpiente(UNIDAD_TABLERO,ancho,alto,jugdores[0],coloresCabezaserpientes[0],coloresCuerpoSerpiestes[0],0,ancho-unidadTablero);
-        colorcarAlimentos();
-    }
+        sorpresasTotales = sorpresasAPoner;
+        elementos = new ArrayList<>();
 
-    /**
-     * Revisa si el alimento fue colocado en un lugar del tablero donde no este el cuerpo de las serpientes[] ni otro
-     * alimento
-     * @param i posicion del alimento en la lista
-     * @return Si el alimento esta en una posicion invalida en el tablero
-     */
-    private Boolean confirmarPosicionAlimentos(int i){
-        if(alimentosEnJuego[0].x == alimentosEnJuego[1].x && alimentosEnJuego[0].y == alimentosEnJuego[1].y){return true;}
-            for (int j = serpientes[0].cuerpo; j >= 0;j--) {
-                for (int k = 0; k < 2; k++) {
-                    if(alimentosEnJuego[i].x == serpientes[k].poscionX[j] && alimentosEnJuego[i].y == serpientes[k].poscionY[j]){
-                        return true;}
-                }
-            }
-        return false;
+        elementos.add(0,alimentoAleatorio());
+        elementos.add(1,alimentoAleatorio());
+        elementos.add(2,sorpresaAleatoria());
+
+        serpientes = new Serpiente[2];
+
+        serpientes[0] = new Serpiente(UNIDAD_TABLERO,ancho,alto,jugdores[0],coloresCabezaserpientes[0],coloresCuerpoSerpiestes[0], alto-unidadTablero, 0);
+        if(multiplayer){serpientes[1] = new Serpiente(UNIDAD_TABLERO,ancho,alto,jugdores[1],coloresCabezaserpientes[1],coloresCuerpoSerpiestes[1],0,ancho-unidadTablero);}
+        nuevosAlimentos();
     }
 
     private Sorpresas sorpresaAleatoria(){
-        switch (alimentosTotales[random.nextInt(alimentosTotales.length)]) {
-            case "Aumento" -> {
-                return new Aumento(UNIDAD_TABLERO, ancho, alto);
+        switch (sorpresasTotales[random.nextInt(sorpresasTotales.length)]) {
+            case "Aumento vel." -> {
+                return new Aumento(UNIDAD_TABLERO, ancho, alto, multiplayer);
             }
-            case "Disminucion" -> {
-                return new Disminucion(UNIDAD_TABLERO, ancho, alto);
+            case "Disminucion vel." -> {
+                return new Disminucion(UNIDAD_TABLERO, ancho, alto, multiplayer);
+            }
+            case "Bloque Trampa"->{
+                return new BloqueTrampa(UNIDAD_TABLERO, ancho, alto, multiplayer);
+            }
+            case "Division"->{
+                return new Division(UNIDAD_TABLERO, ancho, alto, multiplayer);
+            }
+            case "Fuego"->{
+                return new EstrellaFuego(UNIDAD_TABLERO, ancho, alto, multiplayer);
+            }
+            case "Lupa"->{
+                return new Lupa(UNIDAD_TABLERO, ancho, alto, multiplayer);
             }
             default -> {
                 return sorpresaAleatoria();
@@ -77,48 +80,50 @@ public class Tablero implements Serializable {
     private Alimento alimentoAleatorio() {
         switch (alimentosTotales[random.nextInt(alimentosTotales.length)]){
             case "Manzana" -> {
-                return new Manzana(UNIDAD_TABLERO, ancho, alto);
+                return new Manzana(UNIDAD_TABLERO, ancho, alto, multiplayer);
             }
             case "Manzana Arcoiris" -> {
-                return new ManzanaArcoiris(UNIDAD_TABLERO, ancho, alto);
+                return new ManzanaArcoiris(UNIDAD_TABLERO, ancho, alto, multiplayer);
             }
             case "Dulce" -> {
-                return new Dulce(UNIDAD_TABLERO, ancho, alto);
+                return new Dulce(UNIDAD_TABLERO, ancho, alto, multiplayer);
             }
             case "Veneno" -> {
-                return new Veneno(UNIDAD_TABLERO, ancho, alto);
+                return new Veneno(UNIDAD_TABLERO, ancho, alto, multiplayer);
             }
             default -> {return  alimentoAleatorio();}
         }
     }
 
-    /**
-     * Coloca los alimentos de forma aleatoria en el tablero
-     */
-    private void colorcarAlimentos() {
-        for (int i = 0; i < 2; i++) {
-            alimentosEnJuego[i] = alimentoAleatorio();
-        }
+    public void nuevosAlimentos(){
+        elementos.set(0, alimentoAleatorio());
+        elementos.set(1, alimentoAleatorio());
+        cambiarPosiconElemento(elementos.get(0));
+        cambiarPosiconElemento(elementos.get(1));
     }
 
     /**
-     * Retorna en donde se encuentra el alimento
-     * @param numeroAlimento Poscion del alimento en la lista
-     * @return Retorna la posicion del alimento
+     * Cambia la posicion de un elemento hasta que se encuentre en una posicion valida
+     * @param elemento Posicion del alimento en la lista que se desea cambiar
      */
-    public int[] getAlimentoPosicion ( int numeroAlimento){
-        return new int[]{alimentosEnJuego[numeroAlimento].x, alimentosEnJuego[numeroAlimento].y};
+    public void cambiarPosiconElemento(Elemento elemento){
+        while(confirmarPosicionElementos(elemento)){
+            elemento.cambiarPosicion();
+        }
     }
 
-    /**
-     * Cambia la posicion del alimento hasta que se encuentre en una posicion valida
-     * @param i Posicion del alimento en la lista que se desea cambiar
-     */
-    public void cambiarPosiconAlimento(int i){
-        alimentosEnJuego[i].cambiarPosicion();
-        while(confirmarPosicionAlimentos(i)){
-            alimentosEnJuego[i].cambiarPosicion();
+    private boolean confirmarPosicionElementos(Elemento elemento){
+        for(Elemento elemento1:elementos){
+            if(!elemento.equals(elemento1)){
+                if(elemento1.x == elemento.x && elemento1.y == elemento.y){return true;}
+            }
         }
+
+        for (int j = serpientes[0].cuerpo; j >= 0;j--) {
+            if(elemento.x == serpientes[0].poscionX[j] && elemento.y == serpientes[0].poscionY[j]){ return true;}
+            if (multiplayer){if(elemento.x == serpientes[1].poscionX[j] && elemento.y == serpientes[1].poscionY[j]){ return true;}}
+        }
+        return false;
     }
 
     /**
@@ -127,15 +132,6 @@ public class Tablero implements Serializable {
      */
     public void moveSerpiente(int i){
         serpientes[i].mover();
-    }
-
-    /**
-     * Retorna el color del alimento
-     * @param i Posicion del alimento en la lista
-     * @return Retorna el color del alimento
-     */
-    public Color getColorAlimento(int i){
-        return alimentosEnJuego[i].getColor();
     }
 
     /**
@@ -173,67 +169,57 @@ public class Tablero implements Serializable {
      */
     public void serpienteComeAlimento(){
         for (int i = 0; i < 2; i++) {
-            if(alimentosEnJuego[i].x == serpientes[0].poscionX[0] && alimentosEnJuego[i].y == serpientes[0].poscionY[0]){
-                if (alimentosEnJuego[i] instanceof Veneno) {
-                    serpientes[0].cuerpo = 0;
-                }else{
-                    serpientes[0].cuerpo += alimentosEnJuego[i].incremento(new Color[] {serpientes[0].colorCuerpo, serpientes[0].colorCabeza});
-                }
-                alimentosEnJuego[i] = alimentoAleatorio();
-                cambiarPosiconAlimento(i);
-            }
-            if(alimentosEnJuego[i].x == serpientes[1].poscionX[0] && alimentosEnJuego[i].y == serpientes[1].poscionY[0]){
-                if (alimentosEnJuego[i] instanceof Veneno) {
-                    serpientes[1].cuerpo = 0;
-                }else{
-                    serpientes[1].cuerpo += alimentosEnJuego[i].incremento(new Color[] {serpientes[1].colorCuerpo, serpientes[1].colorCabeza});
-                }
-                alimentosEnJuego[i] = alimentoAleatorio();
-                cambiarPosiconAlimento(i);
-            }
-        }
-    }
+            if(elementos.get(i).x == serpientes[0].poscionX[0] && elementos.get(i).y == serpientes[0].poscionY[0]){
+                if(serpientes[0].tomarAlimentoSiguiente){
+                    ((Alimento)elementos.get(i)).incremento(new Color[] {serpientes[0].colorCuerpo, serpientes[0].colorCabeza}, serpientes[0]);
+                    elementos.set(i, alimentoAleatorio());
+                    cambiarPosiconElemento(elementos.get(i));
+                }else{serpientes[0].tomarAlimentoSiguiente = true;}
 
-    private boolean confirmarSorpresa(){
-        if(sopresa.x == alimentosEnJuego[0].x && sopresa.y == alimentosEnJuego[0].y){return true;}
-        if(sopresa.x == alimentosEnJuego[1].x && sopresa.y == alimentosEnJuego[1].y){return true;}
-        for (int i = 0; i < 2; i++) {
-            for (int j = serpientes[0].cuerpo; j >= 0;j--) {
-                if(sopresa.x == serpientes[i].poscionX[j] && sopresa.y == serpientes[i].poscionY[j]){
-                    return true;}
             }
-        }
-        return false;
-    }
+            if (multiplayer){
+                if(elementos.get(i).x == serpientes[1].poscionX[0] && elementos.get(i).y == serpientes[1].poscionY[0]){
+                    if(serpientes[1].tomarAlimentoSiguiente){
+                        ((Alimento)elementos.get(i)).incremento(new Color[] {serpientes[1].colorCuerpo, serpientes[1].colorCabeza}, serpientes[1]);
 
-    private void cambiarPosicionSorpresa(){
-        sopresa.cambiarPosicion();
-        while(confirmarSorpresa()){
-            sopresa.cambiarPosicion();
+                        elementos.set(i, alimentoAleatorio());
+                        cambiarPosiconElemento(elementos.get(i));
+                    }else{serpientes[1].tomarAlimentoSiguiente = true;}
+                }
+            }
+
         }
     }
 
     public void serpienteTomaSopresa(){
-        if(sopresa.x == serpientes[0].poscionX[0] && sopresa.y == serpientes[0].poscionY[0]){
+        if(elementos.get(2).x == serpientes[0].poscionX[0] && elementos.get(2).y == serpientes[0].poscionY[0]){
             if(serpientes[0].sorpresaPendiente == null){
-                serpientes[0].sorpresaPendiente = sopresa;
-                cambiarPosicionSorpresa();
+                serpientes[0].sorpresaPendiente = (Sorpresas) elementos.get(2);
+                elementos.set(2,sorpresaAleatoria());
+                cambiarPosiconElemento(elementos.get(2));
+            }
+        }
+        if(multiplayer){
+            if(elementos.get(2).x == serpientes[1].poscionX[0] && elementos.get(2).y == serpientes[1].poscionY[0]){
+                if(serpientes[1].sorpresaPendiente == null){
+                    serpientes[1].sorpresaPendiente = (Sorpresas) elementos.get(2);
+                    cambiarPosiconElemento(elementos.get(2));
+                }
             }
         }
     }
 
     public void serpienteLanzaPoder(int i){
         if(serpientes[i].sorpresaPendiente != null){
+            serpientes[i].sorpresaPendiente.lanzar(elementos, serpientes,serpientes[i]);
             serpientes[i].sorpresaPendiente = null;
+            for (int j = 3; j < elementos.size(); j++) {
+                cambiarPosiconElemento(elementos.get(j));
+            }
         }
     }
-
-    public int[] getSorpresaPosicion (){
-        return new int[]{sopresa.x, sopresa.y};
-    }
-
-    public Image getSorpresaImage(){
-        return sopresa.getImage();
+    public ArrayList<Elemento> getElementos(){
+        return elementos;
     }
 
     /**
@@ -241,26 +227,12 @@ public class Tablero implements Serializable {
      * @return Retorna si el tablero esta en una posicion de perdida
      */
     public boolean perderJuego(){
-        if(serpientes[0].cuerpo <= 0){return true;}
-        for(int i = serpientes[0].cuerpo;i>0;i--) {
-            if ((serpientes[0].poscionX[0] == serpientes[0].poscionX[i]) && (serpientes[0].poscionY[0] == serpientes[0].poscionY[i])) {
-                return true;
-            }
-        }
-        if(serpientes[0].poscionX[0] < 0) {
-            return true;
-        }
-        if(serpientes[0].poscionX[0] >= ancho) {
-            return true;
-        }
-        if(serpientes[0].poscionY[0] < 0) {
-            return true;
-        }
-        if(serpientes[0].poscionY[0] >= alto) {
-            System.out.println(alto);
-            return true;
-        }
-        return false;
+        serpientes[0].estaMuerta(elementos, serpientes);
+        if(multiplayer){
+            serpientes[1].estaMuerta(elementos, serpientes);
+            System.out.println(serpientes[0].muerta + " " + serpientes[1].muerta);
+            return (serpientes[0].muerta && serpientes[1].muerta);}
+        return serpientes[0].muerta;
     }
 
 }

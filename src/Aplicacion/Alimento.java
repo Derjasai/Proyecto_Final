@@ -4,12 +4,7 @@ import java.awt.*;
 import java.io.Serializable;
 import java.util.Random;
 
-abstract class Alimento implements Serializable {
-
-    private int alto,ancho;
-    private final int UNIDAD_TABLERO;
-    public int x;
-    public int y;
+abstract class Alimento extends Elemento implements Serializable{
     protected Color color;
 
     /**
@@ -18,27 +13,15 @@ abstract class Alimento implements Serializable {
      * @param ancho Ancho del tablero
      * @param alto Alto del tablero
      */
-    public Alimento(int unidadTablero, int ancho, int alto){
-        this.UNIDAD_TABLERO = unidadTablero;
-        this.ancho = ancho;
-        this.alto = alto;
-        x = Tablero.random.nextInt(ancho/ UNIDAD_TABLERO) * UNIDAD_TABLERO;
-        y = Tablero.random.nextInt(alto/ UNIDAD_TABLERO)* UNIDAD_TABLERO;
-    }
-
-    /**
-     * Cambia la posicon x,y del Alimento
-     */
-    public void cambiarPosicion(){
-        x = Tablero.random.nextInt(ancho/ UNIDAD_TABLERO) * UNIDAD_TABLERO;
-        y = Tablero.random.nextInt(alto/ UNIDAD_TABLERO)* UNIDAD_TABLERO;
+    public Alimento(int unidadTablero, int ancho, int alto, boolean multiplayer){
+        super(unidadTablero,ancho,alto,multiplayer);
     }
 
     /**
      * Decide el incremento que da los alimentos al ser comida
      * @param compararColor Colores de la serpiente que come el alimento
      */
-    abstract int incremento(Color[] compararColor);
+    abstract void incremento(Color[] compararColor, Serpiente serpiente);
 
     /**
      * Retorna el color del alimento

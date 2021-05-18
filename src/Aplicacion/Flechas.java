@@ -4,12 +4,7 @@ import java.awt.*;
 
 abstract class Flechas extends Sorpresas{
 
-    public Flechas(int unidadTablero, int ancho, int alto){
-        super(unidadTablero,ancho,alto);
-
+    public Flechas(int unidadTablero, int ancho, int alto, boolean multiplayer){
+        super(unidadTablero,ancho,alto,multiplayer);
     }
-
-    abstract void lanzar();
-
-    abstract Image getImage();
 }

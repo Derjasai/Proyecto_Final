@@ -1,6 +1,10 @@
 package Aplicacion;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class ManzanaArcoiris extends Alimento{
 
@@ -10,8 +14,8 @@ public class ManzanaArcoiris extends Alimento{
      * @param ancho Ancho del tablero
      * @param alto Alto del tablero
      */
-    public ManzanaArcoiris(int unidadTablero, int ancho, int alto){
-        super(unidadTablero,ancho,alto);
+    public ManzanaArcoiris(int unidadTablero, int ancho, int alto, boolean multiplayer){
+        super(unidadTablero,ancho,alto,multiplayer);
         color = new Color(Tablero.random.nextInt(255),Tablero.random.nextInt(255),Tablero.random.nextInt(255));
     }
 
@@ -21,13 +25,23 @@ public class ManzanaArcoiris extends Alimento{
      * @param compararColor Colores de la serpiente que come el alimento
      */
     @Override
-    int incremento(Color[] compararColor) {
-        return 3;
+    void incremento(Color[] compararColor, Serpiente serpiente) {
+        serpiente.cuerpo += 3;
     }
 
     @Override
     public Color getColor() {
         color = new Color(Tablero.random.nextInt(255),Tablero.random.nextInt(255),Tablero.random.nextInt(255));
         return super.getColor();
+    }
+
+    public Image getImage(){
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(new File("imgs/multicolor.png")); // la carga en una BufferedReade
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return img;
     }
 }

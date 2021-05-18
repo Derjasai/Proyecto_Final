@@ -5,23 +5,19 @@ import Persistencia.Manager;
 import java.awt.*;
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Juego implements Serializable {
 
     private Tablero tablero;
     public Boolean perdio,enPausa;
+    public  Boolean multiplayer;
+    public int jugadores;
 
-    public Juego(int ancho, int alto, int unidadTablero, String[] jugdores, Color[] coloresCabezaSerpientes, Color[] coloresCuerpoSerpiestes, String[] alimentosAPoner){
-        tablero = new Tablero(ancho,alto,unidadTablero,jugdores,coloresCabezaSerpientes,coloresCuerpoSerpiestes,alimentosAPoner);
-    }
-
-    /**
-     * Retorna en donde se encuentra el alimento
-     * @param numeroAlimento Poscion del alimento en la lista
-     * @return Retorna la posicion del alimento
-     */
-    public int[] getAlimentoPosicion ( int numeroAlimento){
-        return tablero.getAlimentoPosicion(numeroAlimento);
+    public Juego(int ancho, int alto, int unidadTablero, String[] jugdores, Color[] coloresCabezaSerpientes, Color[] coloresCuerpoSerpiestes, String[] alimentosAPoner, String[] sorpresasAPoner){
+        this.jugadores = jugdores.length;
+        multiplayer = jugadores == 2;
+        tablero = new Tablero(ancho,alto,unidadTablero,jugdores,coloresCabezaSerpientes,coloresCuerpoSerpiestes,alimentosAPoner, sorpresasAPoner);
     }
 
     /**
@@ -29,15 +25,6 @@ public class Juego implements Serializable {
      */
     public void moveSerpiente(int i){
         tablero.moveSerpiente(i);
-    }
-
-    /**
-     * Retorna el color del alimento
-     * @param i Posicion del alimento en la lista
-     * @return Retorna el color del alimento
-     */
-    public Color getColorAlimento(int i){
-        return tablero.getColorAlimento(i);
     }
 
     /**
@@ -92,18 +79,17 @@ public class Juego implements Serializable {
     }
 
     public void cambiarPosAlimentos(){
-        for (int i = 0; i < 2; i++) {
-            tablero.cambiarPosiconAlimento(i);
-        }
+        tablero.nuevosAlimentos();
     }
-
-    public int[] getSorpresaPos(){return tablero.getSorpresaPosicion();}
-
-    public Image getImageSorpresa(){return tablero.getSorpresaImage();}
 
     public void serpienteTomaSorpresa(){tablero.serpienteTomaSopresa();}
 
     public void serpienteLanzaPoder(int i){tablero.serpienteLanzaPoder(i);}
+
+    public ArrayList<Elemento> getElementos(){return tablero.getElementos();}
+
+
+    /*Seccion de persistencia*/
 
     public void save(File selectedFile) throws JuegoExcepcion {
         Manager.getInstance().save(selectedFile, this);

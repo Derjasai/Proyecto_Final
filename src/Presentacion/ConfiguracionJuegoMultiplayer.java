@@ -7,15 +7,15 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class ConfiguracionJuego extends JPanel {
+public class ConfiguracionJuegoMultiplayer extends JPanel {
 
     private JColorChooser colorChooser;
-    private JTextField campoNombre;
-    private Color cabeza;
-    private Color cuerpo;
-    private JButton cambiarColorCabeza;
-    private JButton cambiarColorCuerpo;
-    private JLabel colorCabeza, colorCuerpo;
+    private JTextField campoNombre, campoNombre1;
+    private Color cabeza, cabeza1;
+    private Color cuerpo, cuerpo1;
+    private JButton cambiarColorCabeza, cambiarColorCabeza1;
+    private JButton cambiarColorCuerpo, cambiarColorCuerpo1;
+    private JLabel colorCabeza, colorCuerpo, colorCabeza1, colorCuerpo1;
     private JButton iniciar;
     private SnOOPeGUI ventana;
     private JRadioButton[] alimentos;
@@ -25,7 +25,7 @@ public class ConfiguracionJuego extends JPanel {
      * Constructor de la clase
      * @param ventana JFrame donde se le añade el JPanel
      */
-    public ConfiguracionJuego(SnOOPeGUI ventana){
+    public ConfiguracionJuegoMultiplayer(SnOOPeGUI ventana){
         this.ventana = ventana;
         prepareElementos();
         prepareAcciones();
@@ -40,29 +40,60 @@ public class ConfiguracionJuego extends JPanel {
         this.colorChooser = new JColorChooser();
         this.iniciar = new JButton("Iniciar Juego");
         this.setFocusable(true);
-        this.add(prepareElementosCabeza());
-        this.add(prepareElementosCuerpo());
-        this.add(prepareElementosNombre());
+        this.add(prepareElementosContenedorCabeza());
+        this.add(prepareElementosContendorCuerpo());
+        this.add(prepareElementosContenedorNombre());
         this.add(prepareElementosOpcionesAlimentos());
         this.add(prepareelementosOpcionesSorpresas());
         this.add(iniciar);
+    }
+
+    private Box prepareElementosContenedorCabeza(){
+        cambiarColorCabeza  = new JButton("Cambiar color cabeza Serpiente 1");
+        cambiarColorCabeza1 = new JButton("Cambiar color cabeza Serpiente 2");
+        cabeza = Color.RED; cabeza1 = Color.GREEN;
+        colorCabeza = new JLabel("Ejemeplo color cabeza Serpiente 1");
+        colorCabeza1 = new JLabel("Ejemeplo color cabeza Serpiente 2");
+        Box contenedor = Box.createHorizontalBox();
+        contenedor.add(prepareElementosCabeza(cabeza,cambiarColorCabeza,colorCabeza));
+        contenedor.add(prepareElementosCabeza(cabeza1,cambiarColorCabeza1,colorCabeza1));
+        return contenedor;
+    }
+
+    private Box prepareElementosContendorCuerpo(){
+        cambiarColorCuerpo  = new JButton("Cambiar color cuerpo Serpiente 1");
+        cambiarColorCuerpo1 = new JButton("Cambiar color cuerpo Serpiente 2");
+        cuerpo = Color.CYAN; cuerpo1 = Color.BLUE;
+        colorCuerpo = new JLabel("Ejemeplo color cuerpo Serpiente 1");
+        colorCuerpo1 = new JLabel("Ejemeplo color cuerpo Serpiente 2");
+        Box contenedor = Box.createHorizontalBox();
+        contenedor.add(prepareElementosCuerpo(cuerpo,cambiarColorCuerpo,colorCuerpo));
+        contenedor.add(prepareElementosCuerpo(cuerpo1,cambiarColorCuerpo1,colorCuerpo1));
+        return contenedor;
+    }
+
+    private Box prepareElementosContenedorNombre(){
+        campoNombre = new JTextField("Player 1");
+        campoNombre1 = new JTextField("Player 2");
+
+        Box contenedor = Box.createHorizontalBox();
+        contenedor.add(prepareElementosNombre(campoNombre));
+        contenedor.add(prepareElementosNombre(campoNombre1));
+        return contenedor;
     }
 
     /**
      * Prepara los elementos de seleccion de color de la cabeza
      * @return Retorna el JPanel de seleccion de color de la cabeza
      */
-    private JPanel prepareElementosCabeza(){
+    private JPanel prepareElementosCabeza(Color colorCabeza, JButton boton, JLabel colorCabezaL){
         JPanel cabeza = new JPanel();
-        this.cabeza = Color.RED;
-        colorCabeza = new JLabel("Color Ejemplo de la Cabeza");
-        colorCabeza.setOpaque(true);
-        cambiarColorCabeza = new JButton("Cambiar de color");
+        colorCabezaL.setOpaque(true);
         cabeza.setLayout(new FlowLayout());
-        colorCabeza.setBackground(this.cabeza);
-        colorCabeza.setSize(15,15);
-        cabeza.add(colorCabeza);
-        cabeza.add(cambiarColorCabeza);
+        colorCabezaL.setBackground(colorCabeza);
+        colorCabezaL.setSize(15,15);
+        cabeza.add(colorCabezaL);
+        cabeza.add(boton);
         return cabeza;
     }
 
@@ -70,17 +101,14 @@ public class ConfiguracionJuego extends JPanel {
      * Prepara los elementos de seleccion de color del cuerpo
      * @return Retorna el JPanel de seleccion de color del cuerpo
      */
-    private JPanel prepareElementosCuerpo(){
+    private JPanel prepareElementosCuerpo(Color colorCuerpo, JButton boton, JLabel colorCabezaL){
         JPanel cuerpo = new JPanel();
-        this.cuerpo = Color.CYAN;
-        colorCuerpo = new JLabel("Color Ejemplo del Cuerpo");
-        colorCuerpo.setOpaque(true);
-        cambiarColorCuerpo = new JButton("Cambiar de color");
+        colorCabezaL.setOpaque(true);
         cuerpo.setLayout(new FlowLayout());
-        colorCuerpo.setBackground(this.cuerpo);
-        colorCuerpo.setSize(15,15);
-        cuerpo.add(colorCuerpo);
-        cuerpo.add(cambiarColorCuerpo);
+        colorCabezaL.setBackground(colorCuerpo);
+        colorCabezaL.setSize(15,15);
+        cuerpo.add(colorCabezaL);
+        cuerpo.add(boton);
         return cuerpo;
     }
 
@@ -88,12 +116,10 @@ public class ConfiguracionJuego extends JPanel {
      * Prepara los elementos de seleccion de nombre
      * @return Retorna el JPanel de seleccion de nombre
      */
-    private JPanel prepareElementosNombre(){
+    private JPanel prepareElementosNombre(JTextField campoNombre){
         JPanel nombre = new JPanel();
-        campoNombre = new JTextField();
-        campoNombre.setText("Player");
-        JLabel nombreLabel = new JLabel("Digite el nombre del jugador");
         nombre.setLayout(new FlowLayout());
+        JLabel nombreLabel = new JLabel("Digite el nombre del jugador");
 
         Box tamanoOriginal = Box.createVerticalBox();
         tamanoOriginal.add(nombreLabel);
@@ -144,29 +170,31 @@ public class ConfiguracionJuego extends JPanel {
      * Prepara las acciones de para seleccionar los colores
      */
     private void prepareAcciones(){
-        cambiarColorCabeza.addActionListener(e->cambiarColorCabeza());
-        cambiarColorCuerpo.addActionListener(e->cambiarColorCuerpo());
+        cambiarColorCabeza.addActionListener(e->cambiarColorCabeza(cabeza));
+        cambiarColorCuerpo1.addActionListener(e->cambiarColorCuerpo(cabeza1));
+        cambiarColorCuerpo.addActionListener(e->cambiarColorCuerpo(cuerpo));
+        cambiarColorCuerpo1.addActionListener(e->cambiarColorCuerpo(cuerpo1));
         iniciar.addActionListener(e->iniciarJuego());
     }
 
     /**
      * Funcionalidad para cambiar el color del cuerpo
      */
-    private void cambiarColorCuerpo(){
+    private void cambiarColorCuerpo(Color color){
         colorChooser.setVisible(true);
-        Color changeColor = JColorChooser.showDialog(null, "Cambiar de color",cuerpo);
-        if(changeColor != null){ cuerpo = changeColor;}
-        this.colorCuerpo.setBackground(cuerpo);
+        Color changeColor = JColorChooser.showDialog(null, "Cambiar de color",color);
+        if(changeColor != null){ color = changeColor;}
+        this.colorCuerpo.setBackground(color);
     }
 
     /**
      * Funcionalidad para cambiar el color de la cabeza
      */
-    private void cambiarColorCabeza(){
+    private void cambiarColorCabeza(Color color){
         colorChooser.setVisible(true);
-        Color changeColor = JColorChooser.showDialog(null, "Cambiar de color",cabeza);
-        if(changeColor != null){ cabeza = changeColor;}
-        this.colorCabeza.setBackground(cabeza);
+        Color changeColor = JColorChooser.showDialog(null, "Cambiar de color",color);
+        if(changeColor != null){ color = changeColor;}
+        this.colorCabeza.setBackground(color);
     }
 
     /**
@@ -208,9 +236,9 @@ public class ConfiguracionJuego extends JPanel {
      */
     private void iniciarJuego(){
         this.setVisible(false);
-        ventana.panelJuego = new PanelDeJuego(new Color[]{cabeza},
-                new Color[]{cuerpo},
-                new String[]{campoNombre.getText()},
+        ventana.panelJuego = new PanelDeJuego(new Color[]{cabeza,cabeza1},
+                new Color[]{cuerpo,cuerpo1},
+                new String[]{campoNombre.getText(),campoNombre1.getText()},
                 getEleccionesAlimentos(),
                 getEleccionesSorpresas(),
                 ventana);
@@ -221,7 +249,6 @@ public class ConfiguracionJuego extends JPanel {
 
     private Icon getImage(String path){
         BufferedImage img = null;
-
         try {
             img = ImageIO.  read(new File(path)); // la carga en una BufferedReade
         } catch (IOException e) {

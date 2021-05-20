@@ -3,6 +3,10 @@ package Aplicacion;
 import java.awt.*;
 import java.io.Serializable;
 
+/**
+ * Clase encargada de manejar el comportamiento a grandes rasgos de los Elementos del tablero, sin  incluir a la
+ * serpiente
+ */
 public class Elemento implements Serializable {
 
     protected int UNIDAD_TABLERO,ANCHO,ALTO;
@@ -10,7 +14,7 @@ public class Elemento implements Serializable {
     protected boolean multiplayer;
 
     /**
-     * Constructor de las clases que hereden de alimento
+     * Constructor de la clase Elemento
      * @param unidadTablero Unidad cuadrada del tablero
      * @param ancho Ancho del tablero
      * @param alto Alto del tablero
@@ -31,6 +35,10 @@ public class Elemento implements Serializable {
         y = Tablero.random.nextInt(ALTO/ UNIDAD_TABLERO)* UNIDAD_TABLERO;
     }
 
+    /**
+     * Obtener la imagen de cada uno de los elementos
+     * @return Imagen del elemento
+     */
     public Image getImage(){
         return null;
     }

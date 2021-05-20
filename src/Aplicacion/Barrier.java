@@ -10,16 +10,20 @@ import java.io.Serializable;
 public class Barrier extends Elemento implements Serializable {
 
     /**
-     * Constructor de las clases que hereden de alimento
-     *
+     * Constructor de la clase Barrier
      * @param unidadTablero Unidad cuadrada del tablero
-     * @param ancho         Ancho del tablero
-     * @param alto          Alto del tablero
+     * @param ancho Ancho del tablero
+     * @param alto Alto del tablero
+     * @param multiplayer Valor de verdad para sbaer si hay mas de un jugador en el juego
      */
     public Barrier(int unidadTablero, int ancho, int alto, boolean multiplayer){
         super(unidadTablero,ancho,alto,multiplayer);
     }
 
+    /**
+     * Obtener la imagen del elemento del paquete imgs
+     * @return Imagen del elemento
+     */
     public Image getImage(){
         BufferedImage img = null;
         try {

@@ -4,6 +4,9 @@ import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Clase encargada de manejar el movimiento de la serpiente, decidir si muere y llevar el conteo del tamaño de su cuerpo
+ */
 public class Serpiente implements Serializable {
 
     private final int UNIDAD_TABLERO,ANCHO,ALTO;
@@ -37,7 +40,6 @@ public class Serpiente implements Serializable {
         int totalidadSerpiente = (ALTO/ UNIDAD_TABLERO)*(ANCHO/UNIDAD_TABLERO);
         poscionX = new int[totalidadSerpiente];
         poscionY = new int[totalidadSerpiente];
-        direction = 'D';
         if(ejeX==0){direction = 'R';}
         if(ejeY==0){direction = 'L';}
         for(int i = cuerpo+5;i>=0;i--) {
@@ -49,6 +51,9 @@ public class Serpiente implements Serializable {
         }
     }
 
+    /**
+     * Ubicar el cerpo en su siguiente posicion
+     */
     private void ubicarCuerpo(){
         for(int i = cuerpo+5;i>0;i--) {
             poscionX[i] = poscionX[i-1];
@@ -77,21 +82,34 @@ public class Serpiente implements Serializable {
 
     }
 
-    public void setDirection(char direction){
-        this.direction = direction;
-    }
-    
+    /**
+     * Obtener la puntuacion de la serpiente
+     * @return Retorna la puntuacion de la serpiente
+     */
     public int getPuntuacion(){
-        return cuerpo - 3;
+        if(cuerpo-3 < 0){
+            return 0;
+        }
+        else {
+            return cuerpo - 3;
+        }
     }
 
+    /**
+     * Retorna la imagen de la sorpresa pendiente que tiene la serpiente actualmente
+     * @return Imagen de la sorpresa
+     */
     public Image sorpresaPendiente(){
         return sorpresaPendiente.getImage();
     }
-    
+
+    /**
+     * Decide si la serpiente esta en un estado invalido en el tablero
+     * @param elementos Lista de elementos del tablero
+     * @param serpientes Serpientes en juego
+     */
     public void estaMuerta(ArrayList<Elemento> elementos, Serpiente[] serpientes){
         if(this.cuerpo <= 0){muerta = true;}
-
         for(Serpiente serpiente: serpientes){
             if(serpiente != null){
                 for(int i = serpiente.cuerpo;i>0;i--) {

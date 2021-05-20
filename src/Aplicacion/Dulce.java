@@ -6,13 +6,17 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Clase encargada de manejar el comportamiento del alimento Dulce
+ */
 public class Dulce  extends Alimento{
 
     /**
-     *Alimento de color azul que disminuye en uno el cuerpo de la serpiente
+     * Constructor de la clase Dulce
      * @param unidadTablero Unidad cuadrada del tablero
      * @param ancho Ancho del tablero
      * @param alto Alto del tablero
+     * @param multiplayer Valor de verdad para sbaer si hay mas de un jugador en el juego
      */
     public Dulce(int unidadTablero, int ancho, int alto, boolean multiplayer){
         super(unidadTablero,ancho,alto,multiplayer);
@@ -32,6 +36,10 @@ public class Dulce  extends Alimento{
         serpiente.cuerpo -= 1;
     }
 
+    /**
+     * Obtener la imagen del paquete imgs
+     * @return La imagen del alimento
+     */
     public Image getImage(){
         BufferedImage img = null;
         try {

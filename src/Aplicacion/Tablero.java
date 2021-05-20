@@ -3,6 +3,10 @@ package Aplicacion;
 import java.awt.*;
 import java.io.Serializable;
 import java.util.*;
+
+/**
+ * Clase encargada de manejar la parte logica del tablero de juego
+ */
 public class Tablero implements Serializable {
 
     private String[] jugadores;
@@ -47,6 +51,10 @@ public class Tablero implements Serializable {
         nuevosAlimentos();
     }
 
+    /**
+     * Metodo para obtener una sorpresa aleatoria
+     * @return Retorna una sorpresa
+     */
     private Sorpresas sorpresaAleatoria(){
         switch (sorpresasTotales[random.nextInt(sorpresasTotales.length)]) {
             case "Aumento vel." -> {
@@ -143,28 +151,6 @@ public class Tablero implements Serializable {
     }
 
     /**
-     * Retorna la puntuacion de la serpiente
-     * @return Retorna la puntuacion de la serpiente
-     */
-    public int getPuntuacionSerpiente(int i){
-        return serpientes[i].getPuntuacion();
-    }
-
-    /**
-     * Retorna el color del cuerpo de la serpiente
-     * @return Retorna el color del cuerpo de la serpiente
-     */
-    public Color getColorCuerpo(int i){ return serpientes[i].colorCuerpo; }
-
-    /**
-     * Retorna el color del cuerpo de la serpiente
-     * @return Retorna el color de la cabeza de la serpiente
-     */
-    public Color getColorCabeza(int i){
-        return serpientes[i].colorCabeza;
-    }
-
-    /**
      * Decide si la serpiente "come" un alimento, se le suma lo indicado al cuerpo de la serpiente
      */
     public void serpienteComeAlimento(){
@@ -218,6 +204,11 @@ public class Tablero implements Serializable {
             }
         }
     }
+
+    /**
+     * Obtener la lista de elementos del tablero
+     * @return Lista de Elementos del tablero
+     */
     public ArrayList<Elemento> getElementos(){
         return elementos;
     }
@@ -230,7 +221,6 @@ public class Tablero implements Serializable {
         serpientes[0].estaMuerta(elementos, serpientes);
         if(multiplayer){
             serpientes[1].estaMuerta(elementos, serpientes);
-            System.out.println(serpientes[0].muerta + " " + serpientes[1].muerta);
             return (serpientes[0].muerta && serpientes[1].muerta);}
         return serpientes[0].muerta;
     }

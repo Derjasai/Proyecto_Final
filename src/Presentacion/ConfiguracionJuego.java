@@ -221,9 +221,8 @@ public class ConfiguracionJuego extends JPanel {
 
     private Icon getImage(String path){
         BufferedImage img = null;
-
         try {
-            img = ImageIO.  read(new File(path)); // la carga en una BufferedReade
+            img = ImageIO. read(new File(path)); // la carga en una BufferedReade
         } catch (IOException e) {
             e.printStackTrace();
         }

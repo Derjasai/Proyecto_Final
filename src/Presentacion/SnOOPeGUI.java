@@ -4,10 +4,8 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.io.File;
 
 import Aplicacion.Juego;
-import Persistencia.*;
 
 public class SnOOPeGUI extends JFrame{
 
@@ -76,7 +74,6 @@ public class SnOOPeGUI extends JFrame{
                 this.add(panelJuego);
                 this.pack();
                 this.setLocationRelativeTo(null);
-
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
@@ -119,7 +116,7 @@ public class SnOOPeGUI extends JFrame{
     /**
      * Prepara los elementos de eleccion de modo de juego
      */
-    public void prepareElementosEleccion(){
+    private void prepareElementosEleccion(){
         principal.setLayout(new BoxLayout(principal,BoxLayout.X_AXIS));
         principal.setBorder(new LineBorder(Color.BLACK,3));
         JPanel selecciones = new JPanel();
@@ -131,6 +128,7 @@ public class SnOOPeGUI extends JFrame{
         selecciones.add(unSoloJugador);
         selecciones.add(jugadorVsJugador);
         selecciones.add(jugadorVsMaquina);
+
         principal.add(Box.createHorizontalGlue());
         principal.add(selecciones);
         principal.add(Box.createHorizontalGlue());

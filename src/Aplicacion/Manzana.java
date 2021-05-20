@@ -6,6 +6,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Clase encargada de manjear el comportamiento de la manzana
+ */
 public class Manzana extends Alimento{
 
     /**
@@ -13,6 +16,7 @@ public class Manzana extends Alimento{
      * @param unidadTablero Unidad cuadrada del tablero
      * @param ancho Ancho del tablero
      * @param alto Alto del tablero
+     * @param multiplayer Valor de verdad para sbaer si hay mas de un jugador en el juego
      */
     public Manzana(int unidadTablero, int ancho, int alto, boolean multiplayer){
         super(unidadTablero,ancho,alto,multiplayer);
@@ -32,6 +36,10 @@ public class Manzana extends Alimento{
         serpiente.cuerpo += 1;
     }
 
+    /**
+     * Obtener la imagen de la carpeta imgs
+     * @return La imagen del alimento
+     */
     public Image getImage(){
         BufferedImage img = null;
         try {

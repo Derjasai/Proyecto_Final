@@ -1,16 +1,15 @@
 package Presentacion;
 
 import Aplicacion.*;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Clase encargada de graficar el tablero con las serpientes,alimentos y sorpresas
+ */
 public class PanelDeJuego extends JPanel implements ActionListener {
 
     private SnOOPeGUI ventana;
@@ -24,11 +23,13 @@ public class PanelDeJuego extends JPanel implements ActionListener {
     private Timer timerSerpiente2;
 
     /**
-     * Constructor de la clase
-     * @param coloresCabeza Lista de los colores de las cabezas, maximo dos serpientes
-     * @param coloresCuerpo Lista de los colores de los cuerpos, maximo dos serpientes
-     * @param nombres Lista de los nombres de las serpientes, maximo dos serpientes
-     * @param alimentosAPoner Lista de los alimentos a poner en el juego
+     * Constructor principal de la clase
+     * @param coloresCabeza Colores de la cabeza de las o de la serpiente
+     * @param coloresCuerpo Colores del cuerpo de las o de la serpiente
+     * @param nombres Nombres de los jugadores o el jugador
+     * @param alimentosAPoner Lista con los alimentos a jugar
+     * @param sorpresasAPoner Lista con las sorpresas a jugar
+     * @param ventana JFrame donde se encuentra el panel
      */
     public PanelDeJuego(Color[] coloresCabeza, Color[] coloresCuerpo, String[] nombres, String[] alimentosAPoner,String[] sorpresasAPoner ,SnOOPeGUI ventana){
         inicializar(ventana);
@@ -37,6 +38,11 @@ public class PanelDeJuego extends JPanel implements ActionListener {
         iniciarJuego();
     }
 
+    /**
+     * Constructor secundario para cuando se tiene que cargar un archivo
+     * @param juego El juego que se carga
+     * @param ventana JFrame donde se encuentra el panel
+     */
     public PanelDeJuego(Juego juego, SnOOPeGUI ventana){
         this.juego = juego;
         juego.perderJuego(); juego.enPausa = true;
@@ -44,6 +50,10 @@ public class PanelDeJuego extends JPanel implements ActionListener {
         iniciarJuego();
     }
 
+    /**
+     * Inicializa el JPnael y activa la opcion de guardar una partda
+     * @param ventana JFrame donde se encuentra el panel
+     */
     private void inicializar(SnOOPeGUI ventana){
         this.ventana = ventana;
         this.setPreferredSize(new Dimension(ANCHO, ALTO));
@@ -91,6 +101,12 @@ public class PanelDeJuego extends JPanel implements ActionListener {
         if(juego.enPausa && !juego.perdio){ juegoEnPausa(g);}
     }
 
+    /**
+     * Dibuja la puntuacion de la serpiente
+     * @param g Grhapics para dibujar
+     * @param serpiente Serpiente de donde se toma el puntaje
+     * @param x Distancia x en pixeles donde poner el nombre
+     */
     private void dibujarPuntuacion(Graphics g, Serpiente serpiente, int x){
 
         g.setColor(Color.BLACK);
@@ -98,7 +114,7 @@ public class PanelDeJuego extends JPanel implements ActionListener {
         g.setFont(font);
         g.drawString(serpiente.nombre+": "+serpiente.getPuntuacion(), x, font.getSize() + ALTO);
         if(serpiente.sorpresaPendiente != null) {
-            g.drawImage(serpiente.sorpresaPendiente(), x+g.getFontMetrics().stringWidth(serpiente.nombre+": "+serpiente.getPuntuacion()+10), ALTO, 50, 50, null);
+            g.drawImage(serpiente.sorpresaPendiente(), x+g.getFontMetrics().stringWidth(serpiente.nombre+": "+serpiente.getPuntuacion())+10, ALTO, 50, 50, null);
         }
     }
 
@@ -119,6 +135,10 @@ public class PanelDeJuego extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Dibujar elementos del mapa, comos sopresas, alimentos, bloques trampa
+     * @param g Graphics para dibujar
+     */
     private void dibujarElementos(Graphics g){
         ArrayList<Elemento> elementos = juego.getElementos();
         for(Elemento elemento: elementos){
@@ -126,6 +146,10 @@ public class PanelDeJuego extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Dibujar el cartel de pausa
+     * @param g Graphics para dibujar
+     */
     private void juegoEnPausa(Graphics g){
         timerSerpiente.stop();
         timerTablero.stop();
@@ -137,7 +161,7 @@ public class PanelDeJuego extends JPanel implements ActionListener {
 
     /**
      * Muestra la pantalla de finalizacion
-     * @param g Graficos
+     * @param g Graphics para dibujar
      */
     private void terminarJuego(Graphics g){
         timerSerpiente.stop();
@@ -149,17 +173,25 @@ public class PanelDeJuego extends JPanel implements ActionListener {
         g.drawString("Has Perdido GG", (ANCHO - metrics2.stringWidth("Game Over"))/2, ALTO/2);
     }
 
+    /**
+     * Procesos a repetir consecutivamente de la serpiente 1
+     * @param e Evento
+     */
     public void timerSerpiente1(ActionEvent e) {
         juego.moveSerpiente(0);
-        juego.serpienteComeAlimento(0);
+        juego.serpienteComeAlimento();
         juego.perderJuego();
         juego.serpienteTomaSorpresa();
         repaint();
     }
 
+    /**
+     * Procesos a repetir de la serpiente 2 en caso de que exista
+     * @param e Evento
+     */
     public void timerSerpiente2(ActionEvent e){
         juego.moveSerpiente(1);
-        juego.serpienteComeAlimento(1);
+        juego.serpienteComeAlimento();
         juego.perderJuego();
         repaint();
     }
@@ -175,23 +207,23 @@ public class PanelDeJuego extends JPanel implements ActionListener {
         }
         switch(e.getKeyCode()) {
             case KeyEvent.VK_LEFT:
-                if(juego.getDirection(0) != 'R') {
-                    juego.getSerpiente(0).setDirection('L');
+                if(juego.getSerpiente(0).direction != 'R') {
+                    juego.getSerpiente(0).direction =('L');
                 }
                 break;
             case KeyEvent.VK_RIGHT:
-                if(juego.getDirection(0) != 'L') {
-                    juego.getSerpiente(0).setDirection('R');
+                if(juego.getSerpiente(0).direction != 'L') {
+                    juego.getSerpiente(0).direction =('R');
                 }
                 break;
             case KeyEvent.VK_UP:
-                if(juego.getDirection(0) != 'D') {
-                    juego.getSerpiente(0).setDirection('U');
+                if(juego.getSerpiente(0).direction != 'D') {
+                    juego.getSerpiente(0).direction =('U');
                 }
                 break;
             case KeyEvent.VK_DOWN:
-                if(juego.getDirection(0) != 'U') {
-                    juego.getSerpiente(0).setDirection('D');
+                if(juego.getSerpiente(0).direction != 'U') {
+                    juego.getSerpiente(0).direction =('D');
                 }
                 break;
             case KeyEvent.VK_M:
@@ -200,23 +232,23 @@ public class PanelDeJuego extends JPanel implements ActionListener {
         if (juego.multiplayer){
             switch(e.getKeyCode()) {
                 case KeyEvent.VK_A:
-                    if(juego.getDirection(1) != 'R') {
-                        juego.getSerpiente(1).setDirection('L');
+                    if(juego.getSerpiente(1).direction != 'R') {
+                        juego.getSerpiente(1).direction =('L');
                     }
                     break;
                 case KeyEvent.VK_D:
-                    if(juego.getDirection(1) != 'L') {
-                        juego.getSerpiente(1).setDirection('R');
+                    if(juego.getSerpiente(1).direction != 'L') {
+                        juego.getSerpiente(1).direction =('R');
                     }
                     break;
                 case KeyEvent.VK_W:
-                    if(juego.getDirection(1) != 'D') {
-                        juego.getSerpiente(1).setDirection('U');
+                    if(juego.getSerpiente(1).direction != 'D') {
+                        juego.getSerpiente(1).direction =('U');
                     }
                     break;
                 case KeyEvent.VK_S:
-                    if(juego.getDirection(1) != 'U') {
-                        juego.getSerpiente(1).setDirection('D');
+                    if(juego.getSerpiente(1).direction != 'U') {
+                        juego.getSerpiente(1).direction =('D');
                     }
                     break;
                 case KeyEvent.VK_X:
@@ -224,14 +256,15 @@ public class PanelDeJuego extends JPanel implements ActionListener {
             }
         }
         juego.moveSerpiente(0);
-        juego.serpienteComeAlimento(0);
-        juego.moveSerpiente(1);
-        juego.serpienteComeAlimento(1);
-        juego.perderJuego();
+        juego.serpienteComeAlimento();
         juego.serpienteTomaSorpresa();
+        juego.perderJuego();
         repaint();
     }
 
+    /**
+     * Metodo para guardar el tablero actual
+     */
     private void guardar(){
         try {
             JFileChooser fileChooser = new JFileChooser();
@@ -247,6 +280,9 @@ public class PanelDeJuego extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Abre un nuevo menu para iniciar un nuevo juego
+     */
     private void nuevo(){
         this.setVisible(false);
         ventana.getJMenuBar().getMenu(0).getItem(3).setEnabled(false);

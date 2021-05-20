@@ -9,10 +9,11 @@ import java.io.IOException;
 public class ManzanaArcoiris extends Alimento{
 
     /**
-     * Manzana que cambia de color con cada tik, de manera aleatoria, aumenta en 2 el cuerpo de la serpiente
+     * Manzana de varios colores, aumenta en 3 el cuerpo de la serpiente
      * @param unidadTablero Unidad cuadrada del tablero
      * @param ancho Ancho del tablero
      * @param alto Alto del tablero
+     * @param multiplayer Valor de verdad para sbaer si hay mas de un jugador en el juego
      */
     public ManzanaArcoiris(int unidadTablero, int ancho, int alto, boolean multiplayer){
         super(unidadTablero,ancho,alto,multiplayer);
@@ -29,12 +30,11 @@ public class ManzanaArcoiris extends Alimento{
         serpiente.cuerpo += 3;
     }
 
-    @Override
-    public Color getColor() {
-        color = new Color(Tablero.random.nextInt(255),Tablero.random.nextInt(255),Tablero.random.nextInt(255));
-        return super.getColor();
-    }
 
+    /**
+     * Obtener una imagen de la carpeta imgs
+     * @return La imagen del alimento
+     */
     public Image getImage(){
         BufferedImage img = null;
         try {

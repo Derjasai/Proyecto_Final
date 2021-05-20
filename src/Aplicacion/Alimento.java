@@ -2,8 +2,10 @@ package Aplicacion;
 
 import java.awt.*;
 import java.io.Serializable;
-import java.util.Random;
 
+/**
+ * Clase abstracta que contiene los elementos principales de los alimentos
+ */
 abstract class Alimento extends Elemento implements Serializable{
     protected Color color;
 

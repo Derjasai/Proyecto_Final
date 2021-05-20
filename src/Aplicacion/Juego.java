@@ -7,6 +7,9 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Clase encargada de conectar la interfaz grafica con la parte logica
+ */
 public class Juego implements Serializable {
 
     private Tablero tablero;
@@ -14,6 +17,17 @@ public class Juego implements Serializable {
     public  Boolean multiplayer;
     public int jugadores;
 
+    /**
+     * Constructor del Juego
+     * @param ancho ancho de la ventana
+     * @param alto Alto de la ventana
+     * @param unidadTablero Unidad de juego del tablero
+     * @param jugdores Nombres de los jugadores o el jugador
+     * @param coloresCabezaSerpientes Colores de la cabeza de las o de la serpiente
+     * @param coloresCuerpoSerpiestes Colores del cuerpo de las o de la serpiente
+     * @param alimentosAPoner Lista con los alimentos a jugar
+     * @param sorpresasAPoner Lista con las sorpresas a jugar
+     */
     public Juego(int ancho, int alto, int unidadTablero, String[] jugdores, Color[] coloresCabezaSerpientes, Color[] coloresCuerpoSerpiestes, String[] alimentosAPoner, String[] sorpresasAPoner){
         this.jugadores = jugdores.length;
         multiplayer = jugadores == 2;
@@ -36,33 +50,9 @@ public class Juego implements Serializable {
     }
 
     /**
-     * Retorna la puntuacion de la serpiente
-     * @return Retorna la puntuacion de la serpiente
-     */
-    public int getPuntuacionSerpiente(int i){
-        return  tablero.getPuntuacionSerpiente(i);
-    }
-
-    /**
-     * Retorna el color del cuerpo de la serpiente
-     * @return Retorna el color del cuerpo de la serpiente
-     */
-    public Color getColorCuerpo(int i){
-        return tablero.getColorCuerpo(i);
-    }
-
-    /**
-     * Retorna el color del cuerpo de la serpiente
-     * @return Retorna el color de la cabeza de la serpiente
-     */
-    public Color getColorCabeza(int i){
-        return tablero.getColorCabeza(i);
-    }
-
-    /**
      * Decide si la serpiente "come" un alimento, se le suma lo indicado al cuerpo de la serpiente
      */
-    public void serpienteComeAlimento(int i){
+    public void serpienteComeAlimento(){
         tablero.serpienteComeAlimento();
     }
 
@@ -74,27 +64,46 @@ public class Juego implements Serializable {
         perdio = tablero.perderJuego();
     }
 
-    public char getDirection(int i){
-        return tablero.getSerpiente(i).direction;
-    }
-
+    /**
+     * Le da la instruccion al tablero de cambiar la posicion de los alimentos
+     */
     public void cambiarPosAlimentos(){
         tablero.nuevosAlimentos();
     }
 
+    /**
+     * Decide si una serpiente toma la sorpresa
+     */
     public void serpienteTomaSorpresa(){tablero.serpienteTomaSopresa();}
 
+    /**
+     * Lanza el poder pendiente de una serpiente
+     * @param i Posicion de la serpiente que lanza el poder
+     */
     public void serpienteLanzaPoder(int i){tablero.serpienteLanzaPoder(i);}
 
+    /**
+     * Obtiene la lista de elemtnos del tablero
+     * @return Retorna la lista de elementos del tablero
+     */
     public ArrayList<Elemento> getElementos(){return tablero.getElementos();}
 
 
     /*Seccion de persistencia*/
 
+    /**
+     * Salvar un juego
+     * @param selectedFile El path donde guardar el archivo
+     * @throws JuegoExcepcion Si ocurre un error al guardar
+     */
     public void save(File selectedFile) throws JuegoExcepcion {
         Manager.getInstance().save(selectedFile, this);
     }
-
+    /**
+     * Guardar un juego
+     * @param selectedFile El path donde abrir el archivo
+     * @throws JuegoExcepcion Si ocurre un error al abrir
+     */
     public static Juego abra(File selectedFile) throws  JuegoExcepcion{
         return Manager.getInstance().guardar(selectedFile);
     }

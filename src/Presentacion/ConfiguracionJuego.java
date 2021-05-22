@@ -35,7 +35,7 @@ public class ConfiguracionJuego extends JPanel {
      * Prepare elementos visuales en general
      */
     private void prepareElementos() {
-        alimentos = new JRadioButton[4];sorpresas = new JRadioButton[6];
+        alimentos = new JRadioButton[4];sorpresas = new JRadioButton[3];
         this.setLayout(new GridLayout(6,1));
         this.colorChooser = new JColorChooser();
         this.iniciar = new JButton("Iniciar Juego");
@@ -131,12 +131,12 @@ public class ConfiguracionJuego extends JPanel {
         JRadioButton division = new JRadioButton("Division",true);
         JRadioButton fuego = new JRadioButton("Fuego",true);
 
-        opciones.add(setRadioButton(aumento,"imgs/aumento.png", 0,sorpresas));
-        opciones.add(setRadioButton(disminucion,"imgs/disminucion.png", 1,sorpresas));
-        opciones.add(setRadioButton(bloque,"imgs/bloqueTrampa.png", 2,sorpresas));
-        opciones.add(setRadioButton(lupa,"imgs/lupa.png", 3,sorpresas));
-        opciones.add(setRadioButton(division,"imgs/division.png", 4,sorpresas));
-        opciones.add(setRadioButton(fuego,"imgs/fuego.png", 5,sorpresas));
+        //opciones.add(setRadioButton(aumento,"imgs/aumento.png", 0,sorpresas));
+        //opciones.add(setRadioButton(disminucion,"imgs/disminucion.png", 1,sorpresas));
+        opciones.add(setRadioButton(bloque,"imgs/bloqueTrampa.png", 0,sorpresas));
+        opciones.add(setRadioButton(lupa,"imgs/lupa.png", 1,sorpresas));
+        opciones.add(setRadioButton(division,"imgs/division.png", 2,sorpresas));
+        //opciones.add(setRadioButton(fuego,"imgs/fuego.png", 5,sorpresas));
         return opciones;
     }
 
@@ -191,13 +191,13 @@ public class ConfiguracionJuego extends JPanel {
      */
     private String[] getEleccionesSorpresas(){
         int count= 0,apunt=0;
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < sorpresas.length; i++) {
             if (sorpresas[i].isSelected()){count++;}
         }
 
         String[] elecciones = new String[count];
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < sorpresas.length; i++) {
             if (sorpresas[i].isSelected()){elecciones[apunt] = sorpresas[i].getText();apunt++;}
         }
         return elecciones;
@@ -209,11 +209,11 @@ public class ConfiguracionJuego extends JPanel {
     private void iniciarJuego(){
         this.setVisible(false);
         ventana.panelJuego = new PanelDeJuego(new Color[]{cabeza},
-                new Color[]{cuerpo},
-                new String[]{campoNombre.getText()},
-                getEleccionesAlimentos(),
-                getEleccionesSorpresas(),
-                ventana);
+                    new Color[]{cuerpo},
+                    new String[]{campoNombre.getText()},
+                    getEleccionesAlimentos(),
+                    getEleccionesSorpresas(),
+                    ventana);
         ventana.add(ventana.panelJuego);
         ventana.pack();
         ventana.setLocationRelativeTo(null);

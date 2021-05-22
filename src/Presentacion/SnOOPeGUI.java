@@ -1,9 +1,13 @@
 package Presentacion;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 import Aplicacion.Juego;
 
@@ -35,7 +39,6 @@ public class SnOOPeGUI extends JFrame{
         this.setSize(new Dimension(1200,800));
         //this.setPreferredSize(new Dimension(1200,830));
         this.setLocationRelativeTo(null);
-
         prepareElementosEleccion();
         prepareElementosMenu();
 
@@ -118,7 +121,6 @@ public class SnOOPeGUI extends JFrame{
      */
     private void prepareElementosEleccion(){
         principal.setLayout(new BoxLayout(principal,BoxLayout.X_AXIS));
-        principal.setBorder(new LineBorder(Color.BLACK,3));
         JPanel selecciones = new JPanel();
         unSoloJugador = new JButton("Un Solo Jugador");
         jugadorVsJugador = new JButton("Jugador vs Jugador");
@@ -155,6 +157,16 @@ public class SnOOPeGUI extends JFrame{
 
         menuBar.add(archivo);
         this.setJMenuBar(menuBar);
+    }
+
+    private Image getImage(){
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(new File("imgs/barrier.png")); // la carga en una BufferedReade
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return img;
     }
 
     public static void main(String[] args){

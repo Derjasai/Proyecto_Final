@@ -78,9 +78,9 @@ public class PanelDeJuego extends JPanel implements ActionListener {
                 configurarMovimiento(e);
             }
         });
-        //  timerTablero.start();
-        //if(juego.multiplayer){timerSerpiente2.start();}
-        //timerSerpiente.start();
+          timerTablero.start();
+        if(juego.multiplayer){timerSerpiente2.start();}
+        timerSerpiente.start();
 
     }
 
@@ -153,6 +153,7 @@ public class PanelDeJuego extends JPanel implements ActionListener {
     private void juegoEnPausa(Graphics g){
         timerSerpiente.stop();
         timerTablero.stop();
+        if (juego.multiplayer){timerSerpiente2.stop();}
         g.setColor(Color.WHITE);
         g.setFont( new Font("Ink Free",Font.BOLD, 75));
         FontMetrics metrics2 = getFontMetrics(g.getFont());
@@ -166,7 +167,7 @@ public class PanelDeJuego extends JPanel implements ActionListener {
     private void terminarJuego(Graphics g){
         timerSerpiente.stop();
         timerTablero.stop();
-        timerSerpiente2.stop();
+        if (juego.multiplayer){timerSerpiente2.stop();}
         g.setColor(Color.WHITE);
         g.setFont( new Font("Ink Free",Font.BOLD, 75));
         FontMetrics metrics2 = getFontMetrics(g.getFont());
@@ -202,7 +203,11 @@ public class PanelDeJuego extends JPanel implements ActionListener {
      */
     private void configurarMovimiento(KeyEvent e){
         if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
-            if(juego.enPausa){timerSerpiente.restart();}
+            if(juego.enPausa){
+                timerSerpiente.restart();
+                timerTablero.restart();
+                if (juego.multiplayer){timerSerpiente2.restart();}
+            }
             juego.enPausa = !juego.enPausa;
         }
         switch(e.getKeyCode()) {
@@ -255,11 +260,6 @@ public class PanelDeJuego extends JPanel implements ActionListener {
                     juego.serpienteLanzaPoder(1);
             }
         }
-        juego.moveSerpiente(0);
-        juego.serpienteComeAlimento();
-        juego.serpienteTomaSorpresa();
-        juego.perderJuego();
-        repaint();
     }
 
     /**

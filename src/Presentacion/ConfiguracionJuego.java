@@ -35,7 +35,7 @@ public class ConfiguracionJuego extends JPanel {
      * Prepare elementos visuales en general
      */
     private void prepareElementos() {
-        alimentos = new JRadioButton[4];sorpresas = new JRadioButton[3];
+        alimentos = new JRadioButton[4];sorpresas = new JRadioButton[6];
         this.setLayout(new GridLayout(6,1));
         this.colorChooser = new JColorChooser();
         this.iniciar = new JButton("Iniciar Juego");
@@ -118,6 +118,7 @@ public class ConfiguracionJuego extends JPanel {
         opciones.add(setRadioButton(manzanaArco,"imgs/multicolor.png",1,alimentos));
         opciones.add(setRadioButton(dulce,"imgs/dulce.png",2,alimentos));
         opciones.add(setRadioButton(veneno,"imgs/veneno.png",3,alimentos));
+
         return opciones;
     }
 
@@ -130,12 +131,14 @@ public class ConfiguracionJuego extends JPanel {
         JRadioButton lupa = new JRadioButton("Lupa",true);
         JRadioButton division = new JRadioButton("Division",true);
         JRadioButton fuego = new JRadioButton("Fuego",true);
+        JRadioButton cambiante = new JRadioButton("Cambiante", true);
 
-        //opciones.add(setRadioButton(aumento,"imgs/aumento.png", 0,sorpresas));
-        //opciones.add(setRadioButton(disminucion,"imgs/disminucion.png", 1,sorpresas));
-        opciones.add(setRadioButton(bloque,"imgs/bloqueTrampa.png", 0,sorpresas));
-        opciones.add(setRadioButton(lupa,"imgs/lupa.png", 1,sorpresas));
-        opciones.add(setRadioButton(division,"imgs/division.png", 2,sorpresas));
+        opciones.add(setRadioButton(aumento,"imgs/aumento.png", 0,sorpresas));
+        opciones.add(setRadioButton(disminucion,"imgs/disminucion.png", 1,sorpresas));
+        opciones.add(setRadioButton(bloque,"imgs/bloqueTrampa.png", 2,sorpresas));
+        opciones.add(setRadioButton(lupa,"imgs/lupa.png", 3,sorpresas));
+        opciones.add(setRadioButton(division,"imgs/division.png", 4,sorpresas));
+        opciones.add(setRadioButton(cambiante,"imgs/cambiante.png",5,sorpresas));
         //opciones.add(setRadioButton(fuego,"imgs/fuego.png", 5,sorpresas));
         return opciones;
     }
@@ -207,16 +210,24 @@ public class ConfiguracionJuego extends JPanel {
      * Inicia el juego
      */
     private void iniciarJuego(){
-        this.setVisible(false);
-        ventana.panelJuego = new PanelDeJuego(new Color[]{cabeza},
+        String[] alimentos = getEleccionesAlimentos();
+        String[] sorpresas = getEleccionesSorpresas();
+        if(alimentos.length == 0){JOptionPane.showMessageDialog(this,"Porfavor juegue con almenos un alimento");}
+        else if(sorpresas.length == 0){JOptionPane.showMessageDialog(this, "Porfavor juegue con almenos una sorpresa");}
+        else{
+            this.setVisible(false);
+            ventana.panelJuego = new PanelDeJuego(new Color[]{cabeza},
                     new Color[]{cuerpo},
                     new String[]{campoNombre.getText()},
-                    getEleccionesAlimentos(),
-                    getEleccionesSorpresas(),
+                    alimentos,
+                    sorpresas,
                     ventana);
-        ventana.add(ventana.panelJuego);
-        ventana.pack();
-        ventana.setLocationRelativeTo(null);
+            ventana.add(ventana.panelJuego);
+            ventana.pack();
+            ventana.setLocationRelativeTo(null);
+        }
+
+
     }
 
     private Icon getImage(String path){

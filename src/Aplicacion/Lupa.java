@@ -24,13 +24,13 @@ public class Lupa extends Sorpresas{
     }
 
     @Override
-    void lanzar(ArrayList<Elemento> elemento, Serpiente[] serpientes, Serpiente serpiente) {
-        if(multiplayer){
-            if(serpientes[0] == serpiente){
-                serpientes[1].tomarAlimentoSiguiente = false;
-            }
-            else {serpientes[0].tomarAlimentoSiguiente = false;}
-        }else {serpiente.tomarAlimentoSiguiente = false;}
+    void lanzar(ArrayList<Barrier> barriers, Serpiente[] serpientes, Serpiente serpiente) {
+        serpienteActuar(serpientes,serpiente).tomarAlimentoSiguiente = false;
+    }
+
+    @Override
+    Sorpresas conseguirSorpresaAleatoria(Tablero tablero) {
+        return null;
     }
 
     /**

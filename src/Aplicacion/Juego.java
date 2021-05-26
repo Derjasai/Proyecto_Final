@@ -88,6 +88,10 @@ public class Juego implements Serializable {
      */
     public ArrayList<Elemento> getElementos(){return tablero.getElementos();}
 
+    public void cambiarPosSorpresa(){
+        tablero.cambiarPosSorpresa();
+    }
+
 
     /*Seccion de persistencia*/
 

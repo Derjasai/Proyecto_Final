@@ -1,10 +1,13 @@
 package Presentacion;
 
 import Aplicacion.*;
+import Persistencia.Manager;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -16,11 +19,12 @@ public class PanelDeJuego extends JPanel implements ActionListener {
     private final int ANCHO = 1200;
     private int ALTO = 770;
     private final int UNIDAD_juego = 30;
-    private int DELAY = 175;
-    public Juego juego;
+    private final Juego juego;
+    private boolean primeraVez = true;
     private Timer timerSerpiente;
-    private Timer timerTablero;
+    private Timer timerAlimentos;
     private Timer timerSerpiente2;
+    private Timer timerSorpresas;
 
     /**
      * Constructor principal de la clase
@@ -69,19 +73,20 @@ public class PanelDeJuego extends JPanel implements ActionListener {
      * Inicializa el juego
      */
     public void iniciarJuego(){
-        timerSerpiente = new Timer(DELAY, this::timerSerpiente1);
-        timerSerpiente2 = new Timer(DELAY, this::timerSerpiente2);
-        timerTablero = new Timer(10000,this);
+        timerSerpiente = new Timer(175, this::timerSerpiente1);
+        timerSerpiente2 = new Timer(175, this::timerSerpiente2);
+        timerAlimentos = new Timer(10000,this);
+        timerSorpresas = new Timer(3000,this::timerSorpresas);
         this.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 configurarMovimiento(e);
             }
         });
-          timerTablero.start();
+        timerAlimentos.start();
         if(juego.multiplayer){timerSerpiente2.start();}
         timerSerpiente.start();
-
+        timerSorpresas.start();
     }
 
     /**
@@ -124,7 +129,7 @@ public class PanelDeJuego extends JPanel implements ActionListener {
      * @param serpiente Serpiente a dibujar
      */
     private void dibujarSerpiente(Graphics g, Serpiente serpiente){
-        for(int i = 0; i< serpiente.cuerpo;i++) {
+        for(int i = 0; i< serpiente.getCuerpo();i++) {
             if(i == 0) {
                 g.setColor(serpiente.colorCabeza);
             }
@@ -151,8 +156,10 @@ public class PanelDeJuego extends JPanel implements ActionListener {
      * @param g Graphics para dibujar
      */
     private void juegoEnPausa(Graphics g){
+        timerAlimentos.stop();
+        if(juego.multiplayer){timerSerpiente2.stop();}
         timerSerpiente.stop();
-        timerTablero.stop();
+        timerSorpresas.stop();
         if (juego.multiplayer){timerSerpiente2.stop();}
         g.setColor(Color.WHITE);
         g.setFont( new Font("Ink Free",Font.BOLD, 75));
@@ -165,13 +172,39 @@ public class PanelDeJuego extends JPanel implements ActionListener {
      * @param g Graphics para dibujar
      */
     private void terminarJuego(Graphics g){
+        timerAlimentos.stop();
+        if(juego.multiplayer){timerSerpiente2.stop();}
         timerSerpiente.stop();
-        timerTablero.stop();
+        timerSorpresas.stop();
         if (juego.multiplayer){timerSerpiente2.stop();}
         g.setColor(Color.WHITE);
         g.setFont( new Font("Ink Free",Font.BOLD, 75));
         FontMetrics metrics2 = getFontMetrics(g.getFont());
         g.drawString("Has Perdido GG", (ANCHO - metrics2.stringWidth("Game Over"))/2, ALTO/2);
+        if(primeraVez){escribirRecords();primeraVez = false;}
+    }
+
+    /**
+     * Escribe los records en un archivo txt
+     */
+    private void escribirRecords(){
+        File file;
+        Serpiente ganadora;
+        if(juego.multiplayer){
+            file = new File("datos/recordsMultiplayer.txt");
+            if(juego.getSerpiente(0).getPuntuacion() > juego.getSerpiente(1).getPuntuacion()){ganadora = juego.getSerpiente(0);}
+            else {ganadora = juego.getSerpiente(1);}
+        }
+        else{
+            ganadora = juego.getSerpiente(0);
+            file = new File("datos/records.txt");
+        }
+
+        try {
+            Manager.getInstance().escribirRecords(file,ganadora.nombre,ganadora.getPuntuacion());
+        } catch (JuegoExcepcion juegoExcepcion) {
+            juegoExcepcion.printStackTrace();
+        }
     }
 
     /**
@@ -179,6 +212,7 @@ public class PanelDeJuego extends JPanel implements ActionListener {
      * @param e Evento
      */
     public void timerSerpiente1(ActionEvent e) {
+        timerSerpiente.setDelay(juego.getSerpiente(0).getDelay());
         juego.moveSerpiente(0);
         juego.serpienteComeAlimento();
         juego.perderJuego();
@@ -191,9 +225,16 @@ public class PanelDeJuego extends JPanel implements ActionListener {
      * @param e Evento
      */
     public void timerSerpiente2(ActionEvent e){
+        timerSerpiente2.setDelay(juego.getSerpiente(1).getDelay());
         juego.moveSerpiente(1);
         juego.serpienteComeAlimento();
         juego.perderJuego();
+        juego.serpienteTomaSorpresa();
+        repaint();
+    }
+
+    public void timerSorpresas(ActionEvent e){
+        juego.cambiarPosSorpresa();
         repaint();
     }
 
@@ -205,7 +246,7 @@ public class PanelDeJuego extends JPanel implements ActionListener {
         if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
             if(juego.enPausa){
                 timerSerpiente.restart();
-                timerTablero.restart();
+                timerAlimentos.restart();
                 if (juego.multiplayer){timerSerpiente2.restart();}
             }
             juego.enPausa = !juego.enPausa;
@@ -296,6 +337,8 @@ public class PanelDeJuego extends JPanel implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
+        juego.getSerpiente(0).setDelay(175);
+        if(juego.multiplayer){juego.getSerpiente(1).setDelay(175);}
         juego.cambiarPosAlimentos();
         repaint();
     }

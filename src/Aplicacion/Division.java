@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Documented;
 import java.util.ArrayList;
 
 /**
@@ -24,13 +25,14 @@ public class Division extends Sorpresas{
     }
 
     @Override
-    void lanzar(ArrayList<Elemento> elemento, Serpiente[] serpientes, Serpiente serpiente) {
-        if(multiplayer){
-            if(serpientes[0] == serpiente){
-                serpientes[1].cuerpo = serpientes[1].cuerpo/2;
-            }
-            else {serpientes[0].cuerpo = serpientes[0].cuerpo/2;}
-        }else {serpiente.cuerpo = serpiente.cuerpo/2;}
+    void lanzar(ArrayList<Barrier> barriers, Serpiente[] serpientes, Serpiente serpiente) {
+        Serpiente prov = serpienteActuar(serpientes,serpiente);
+        prov.crecer(-(prov.getCuerpo()-3)/2);
+    }
+
+    @Override
+    Sorpresas conseguirSorpresaAleatoria(Tablero tablero) {
+        return null;
     }
 
     /**

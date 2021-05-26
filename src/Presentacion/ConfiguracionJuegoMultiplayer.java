@@ -35,7 +35,7 @@ public class ConfiguracionJuegoMultiplayer extends JPanel {
      * Prepare elementos visuales en general
      */
     private void prepareElementos() {
-        alimentos = new JRadioButton[4];sorpresas = new JRadioButton[3];
+        alimentos = new JRadioButton[4];sorpresas = new JRadioButton[6];
         this.setLayout(new GridLayout(6,1));
         this.colorChooser = new JColorChooser();
         this.iniciar = new JButton("Iniciar Juego");
@@ -156,12 +156,14 @@ public class ConfiguracionJuegoMultiplayer extends JPanel {
         JRadioButton lupa = new JRadioButton("Lupa",true);
         JRadioButton division = new JRadioButton("Division",true);
         JRadioButton fuego = new JRadioButton("Fuego",true);
+        JRadioButton cambiante = new JRadioButton("Cambiante", true);
 
-        //opciones.add(setRadioButton(aumento,"imgs/aumento.png", 0,sorpresas));
-        //opciones.add(setRadioButton(disminucion,"imgs/disminucion.png", 1,sorpresas));
-        opciones.add(setRadioButton(bloque,"imgs/bloqueTrampa.png", 0,sorpresas));
-        opciones.add(setRadioButton(lupa,"imgs/lupa.png", 1,sorpresas));
-        opciones.add(setRadioButton(division,"imgs/division.png", 2,sorpresas));
+        opciones.add(setRadioButton(aumento,"imgs/aumento.png", 0,sorpresas));
+        opciones.add(setRadioButton(disminucion,"imgs/disminucion.png", 1,sorpresas));
+        opciones.add(setRadioButton(bloque,"imgs/bloqueTrampa.png", 2,sorpresas));
+        opciones.add(setRadioButton(lupa,"imgs/lupa.png", 3,sorpresas));
+        opciones.add(setRadioButton(division,"imgs/division.png", 4,sorpresas));
+        opciones.add(setRadioButton(cambiante,"imgs/cambiante.png",5,sorpresas));
         //opciones.add(setRadioButton(fuego,"imgs/fuego.png", 5,sorpresas));
         return opciones;
     }
@@ -170,31 +172,51 @@ public class ConfiguracionJuegoMultiplayer extends JPanel {
      * Prepara las acciones de para seleccionar los colores
      */
     private void prepareAcciones(){
-        cambiarColorCabeza.addActionListener(e->cambiarColorCabeza(cabeza));
-        cambiarColorCuerpo1.addActionListener(e->cambiarColorCuerpo(cabeza1));
-        cambiarColorCuerpo.addActionListener(e->cambiarColorCuerpo(cuerpo));
-        cambiarColorCuerpo1.addActionListener(e->cambiarColorCuerpo(cuerpo1));
+        cambiarColorCabeza.addActionListener(e->cambiarColorCabeza());
+        cambiarColorCabeza1.addActionListener(e->cambiarColorCabeza1());
+        cambiarColorCuerpo.addActionListener(e->cambiarColorCuerpo());
+        cambiarColorCuerpo1.addActionListener(e->cambiarColorCuerpo1());
         iniciar.addActionListener(e->iniciarJuego());
     }
 
     /**
      * Funcionalidad para cambiar el color del cuerpo
      */
-    private void cambiarColorCuerpo(Color color){
+    private void cambiarColorCuerpo(){
         colorChooser.setVisible(true);
-        Color changeColor = JColorChooser.showDialog(null, "Cambiar de color",color);
-        if(changeColor != null){ color = changeColor;}
-        this.colorCuerpo.setBackground(color);
+        Color changeColor = JColorChooser.showDialog(null, "Cambiar de color",cuerpo);
+        if(changeColor != null){ cuerpo = changeColor;}
+        colorCuerpo.setBackground(cuerpo);
     }
 
     /**
      * Funcionalidad para cambiar el color de la cabeza
      */
-    private void cambiarColorCabeza(Color color){
+    private void cambiarColorCabeza(){
         colorChooser.setVisible(true);
-        Color changeColor = JColorChooser.showDialog(null, "Cambiar de color",color);
-        if(changeColor != null){ color = changeColor;}
-        this.colorCabeza.setBackground(color);
+        Color changeColor = JColorChooser.showDialog(null, "Cambiar de color",cabeza);
+        if(changeColor != null){ cabeza = changeColor;}
+        colorCabeza.setBackground(cabeza);
+    }
+
+    /**
+     * Funcionalidad para cambiar el color del cuerpo
+     */
+    private void cambiarColorCuerpo1(){
+        colorChooser.setVisible(true);
+        Color changeColor = JColorChooser.showDialog(null, "Cambiar de color",cuerpo1);
+        if(changeColor != null){ cuerpo1 = changeColor;}
+        colorCuerpo1.setBackground(cuerpo1);
+    }
+
+    /**
+     * Funcionalidad para cambiar el color de la cabeza
+     */
+    private void cambiarColorCabeza1(){
+        colorChooser.setVisible(true);
+        Color changeColor = JColorChooser.showDialog(null, "Cambiar de color",cabeza1);
+        if(changeColor != null){ cabeza1 = changeColor;}
+        colorCabeza1.setBackground(cabeza1);
     }
 
     /**
@@ -235,16 +257,25 @@ public class ConfiguracionJuegoMultiplayer extends JPanel {
      * Inicia el juego
      */
     private void iniciarJuego(){
-        this.setVisible(false);
-        ventana.panelJuego = new PanelDeJuego(new Color[]{cabeza,cabeza1},
-                new Color[]{cuerpo,cuerpo1},
-                new String[]{campoNombre.getText(),campoNombre1.getText()},
-                getEleccionesAlimentos(),
-                getEleccionesSorpresas(),
-                ventana);
-        ventana.add(ventana.panelJuego);
-        ventana.pack();
-        ventana.setLocationRelativeTo(null);
+        String[] alimentos = getEleccionesAlimentos();
+        String[] sorpresas = getEleccionesSorpresas();
+        if(alimentos.length == 0){JOptionPane.showMessageDialog(this,"Porfavor juegue con almenos un alimento");}
+        else if(sorpresas.length == 0){JOptionPane.showMessageDialog(this, "Porfavor juegue con almenos una sorpresa");}
+        else if(cuerpo.equals(cuerpo1)){JOptionPane.showMessageDialog(this, "El color del cuerpo de las serpientes no puede ser el mismo");}
+        else if(cabeza1.equals(cabeza)){JOptionPane.showMessageDialog(this, "El color de la cabeza de las serpientes no puede ser el mismo");}
+        else if(campoNombre1.getText().equals(campoNombre.getText())){JOptionPane.showMessageDialog(this, "El nombre de los jugadores no puede ser el mismo");}
+        else {
+            this.setVisible(false);
+            ventana.panelJuego = new PanelDeJuego(new Color[]{cabeza,cabeza1},
+                    new Color[]{cuerpo,cuerpo1},
+                    new String[]{campoNombre.getText(),campoNombre1.getText()},
+                    alimentos,
+                    sorpresas,
+                    ventana);
+            ventana.add(ventana.panelJuego);
+            ventana.pack();
+            ventana.setLocationRelativeTo(null);
+        }
     }
 
     private Icon getImage(String path){

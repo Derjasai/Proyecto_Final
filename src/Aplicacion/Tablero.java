@@ -14,7 +14,9 @@ public class Tablero implements Serializable {
     private final int ancho,alto;
     private Serpiente[] serpientes;
     private String[] alimentosTotales, sorpresasTotales;
-    protected ArrayList<Elemento> elementos;
+    protected ArrayList<Barrier> barriers;
+    private Alimento[] alimentosEnJuego;
+    private  Sorpresas sorpresaEnJuego;
     static public Random random = new Random();
     public boolean multiplayer;
 
@@ -38,11 +40,13 @@ public class Tablero implements Serializable {
         this.UNIDAD_TABLERO = unidadTablero;
         alimentosTotales = alimentosAPoner;
         sorpresasTotales = sorpresasAPoner;
-        elementos = new ArrayList<>();
+        barriers = new ArrayList<>();
+        alimentosEnJuego = new Alimento[2];
+        sorpresaEnJuego = sorpresaAleatoria();
 
-        elementos.add(0,alimentoAleatorio());
-        elementos.add(1,alimentoAleatorio());
-        elementos.add(2,sorpresaAleatoria());
+        alimentosEnJuego[0] = alimentoAleatorio();
+        alimentosEnJuego[1] = alimentoAleatorio();
+        sorpresaEnJuego = sorpresaAleatoria();
 
         serpientes = new Serpiente[2];
 
@@ -55,7 +59,7 @@ public class Tablero implements Serializable {
      * Metodo para obtener una sorpresa aleatoria
      * @return Retorna una sorpresa
      */
-    private Sorpresas sorpresaAleatoria(){
+    public Sorpresas sorpresaAleatoria(){
         switch (sorpresasTotales[random.nextInt(sorpresasTotales.length)]) {
             case "Aumento vel." -> {
                 return new Aumento(UNIDAD_TABLERO, ancho, alto, multiplayer);
@@ -74,6 +78,9 @@ public class Tablero implements Serializable {
             }
             case "Lupa"->{
                 return new Lupa(UNIDAD_TABLERO, ancho, alto, multiplayer);
+            }
+            case "Cambiante" -> {
+                return new Cambiante(UNIDAD_TABLERO, ancho, alto, multiplayer);
             }
             default -> {
                 return sorpresaAleatoria();
@@ -104,10 +111,10 @@ public class Tablero implements Serializable {
     }
 
     public void nuevosAlimentos(){
-        elementos.set(0, alimentoAleatorio());
-        elementos.set(1, alimentoAleatorio());
-        cambiarPosiconElemento(elementos.get(0));
-        cambiarPosiconElemento(elementos.get(1));
+        alimentosEnJuego[0] = alimentoAleatorio();
+        alimentosEnJuego[1] = alimentoAleatorio();
+        cambiarPosiconElemento(alimentosEnJuego[0]);
+        cambiarPosiconElemento(alimentosEnJuego[1]);
     }
 
     /**
@@ -121,13 +128,15 @@ public class Tablero implements Serializable {
     }
 
     private boolean confirmarPosicionElementos(Elemento elemento){
-        for(Elemento elemento1:elementos){
-            if(!elemento.equals(elemento1)){
-                if(elemento1.x == elemento.x && elemento1.y == elemento.y){return true;}
+        for(Alimento alimento:alimentosEnJuego){
+            if(!elemento.equals(alimento)){
+                if(alimento.x == elemento.x && alimento.y == elemento.y){return true;}
             }
         }
-
-        for (int j = serpientes[0].cuerpo; j >= 0;j--) {
+        if(!elemento.equals(sorpresaEnJuego)){
+            if(elemento.x == sorpresaEnJuego.x && elemento.y == sorpresaEnJuego.y){return  true;}
+        }
+        for (int j = serpientes[0].getCuerpo(); j >= 0;j--) {
             if(elemento.x == serpientes[0].poscionX[j] && elemento.y == serpientes[0].poscionY[j]){ return true;}
             if (multiplayer){if(elemento.x == serpientes[1].poscionX[j] && elemento.y == serpientes[1].poscionY[j]){ return true;}}
         }
@@ -155,21 +164,20 @@ public class Tablero implements Serializable {
      */
     public void serpienteComeAlimento(){
         for (int i = 0; i < 2; i++) {
-            if(elementos.get(i).x == serpientes[0].poscionX[0] && elementos.get(i).y == serpientes[0].poscionY[0]){
+            if(alimentosEnJuego[i].x == serpientes[0].poscionX[0] && alimentosEnJuego[i].y == serpientes[0].poscionY[0]){
                 if(serpientes[0].tomarAlimentoSiguiente){
-                    ((Alimento)elementos.get(i)).incremento(new Color[] {serpientes[0].colorCuerpo, serpientes[0].colorCabeza}, serpientes[0]);
-                    elementos.set(i, alimentoAleatorio());
-                    cambiarPosiconElemento(elementos.get(i));
+                    alimentosEnJuego[i].incremento(new Color[] {serpientes[0].colorCuerpo, serpientes[0].colorCabeza}, serpientes[0]);
+                    alimentosEnJuego[i] = alimentoAleatorio();
+                    cambiarPosiconElemento(alimentosEnJuego[i]);
                 }else{serpientes[0].tomarAlimentoSiguiente = true;}
 
             }
             if (multiplayer){
-                if(elementos.get(i).x == serpientes[1].poscionX[0] && elementos.get(i).y == serpientes[1].poscionY[0]){
+                if(alimentosEnJuego[i].x == serpientes[1].poscionX[0] && alimentosEnJuego[i].y == serpientes[1].poscionY[0]){
                     if(serpientes[1].tomarAlimentoSiguiente){
-                        ((Alimento)elementos.get(i)).incremento(new Color[] {serpientes[1].colorCuerpo, serpientes[1].colorCabeza}, serpientes[1]);
-
-                        elementos.set(i, alimentoAleatorio());
-                        cambiarPosiconElemento(elementos.get(i));
+                        alimentosEnJuego[i].incremento(new Color[] {serpientes[1].colorCuerpo, serpientes[1].colorCabeza}, serpientes[1]);
+                        alimentosEnJuego[i] = alimentoAleatorio();
+                        cambiarPosiconElemento(alimentosEnJuego[i]);
                     }else{serpientes[1].tomarAlimentoSiguiente = true;}
                 }
             }
@@ -178,18 +186,18 @@ public class Tablero implements Serializable {
     }
 
     public void serpienteTomaSopresa(){
-        if(elementos.get(2).x == serpientes[0].poscionX[0] && elementos.get(2).y == serpientes[0].poscionY[0]){
+        if(sorpresaEnJuego.x == serpientes[0].poscionX[0] && sorpresaEnJuego.y == serpientes[0].poscionY[0]){
             if(serpientes[0].sorpresaPendiente == null){
-                serpientes[0].sorpresaPendiente = (Sorpresas) elementos.get(2);
-                elementos.set(2,sorpresaAleatoria());
-                cambiarPosiconElemento(elementos.get(2));
+                serpientes[0].sorpresaPendiente = sorpresaEnJuego;
+                sorpresaEnJuego = sorpresaAleatoria();
+                cambiarPosiconElemento(sorpresaEnJuego);
             }
         }
         if(multiplayer){
-            if(elementos.get(2).x == serpientes[1].poscionX[0] && elementos.get(2).y == serpientes[1].poscionY[0]){
+            if(sorpresaEnJuego.x == serpientes[1].poscionX[0] && sorpresaEnJuego.y == serpientes[1].poscionY[0]){
                 if(serpientes[1].sorpresaPendiente == null){
-                    serpientes[1].sorpresaPendiente = (Sorpresas) elementos.get(2);
-                    cambiarPosiconElemento(elementos.get(2));
+                    serpientes[1].sorpresaPendiente = sorpresaEnJuego;
+                    cambiarPosiconElemento(sorpresaEnJuego);
                 }
             }
         }
@@ -197,12 +205,16 @@ public class Tablero implements Serializable {
 
     public void serpienteLanzaPoder(int i){
         if(serpientes[i].sorpresaPendiente != null){
-            serpientes[i].sorpresaPendiente.lanzar(elementos, serpientes,serpientes[i]);
-            serpientes[i].sorpresaPendiente = null;
-            for (int j = 3; j < elementos.size(); j++) {
-                cambiarPosiconElemento(elementos.get(j));
+            serpientes[i].sorpresaPendiente.lanzar(barriers, serpientes,serpientes[i]);
+            serpientes[i].sorpresaPendiente = serpientes[i].sorpresaPendiente.conseguirSorpresaAleatoria(this);
+            for (int j = 0; j < barriers.size(); j++) {
+                cambiarPosiconElemento(barriers.get(j));
             }
         }
+    }
+
+    public void cambiarPosSorpresa(){
+        sorpresaEnJuego.cambiarPosicion(false);
     }
 
     /**
@@ -210,6 +222,10 @@ public class Tablero implements Serializable {
      * @return Lista de Elementos del tablero
      */
     public ArrayList<Elemento> getElementos(){
+        ArrayList<Elemento> elementos = new ArrayList<>();
+        Collections.addAll(elementos, alimentosEnJuego);
+        Collections.addAll(elementos, sorpresaEnJuego);
+        elementos.addAll(barriers);
         return elementos;
     }
 
@@ -218,9 +234,9 @@ public class Tablero implements Serializable {
      * @return Retorna si el tablero esta en una posicion de perdida
      */
     public boolean perderJuego(){
-        serpientes[0].estaMuerta(elementos, serpientes);
+        serpientes[0].estaMuerta(barriers, serpientes);
         if(multiplayer){
-            serpientes[1].estaMuerta(elementos, serpientes);
+            serpientes[1].estaMuerta(barriers, serpientes);
             return (serpientes[0].muerta && serpientes[1].muerta);}
         return serpientes[0].muerta;
     }

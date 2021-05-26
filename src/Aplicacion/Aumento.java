@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Clase para la sorpresa de aumento de velocidad
  */
-public class Aumento extends Flechas {
+public class Aumento extends Sorpresas {
 
     /**
      * Constructor de la clase Aumento
@@ -24,9 +24,15 @@ public class Aumento extends Flechas {
     }
 
     @Override
-    void lanzar(ArrayList<Elemento> elemento, Serpiente[] serpientes, Serpiente serpiente) {
-
+    void lanzar(ArrayList<Barrier> barriers, Serpiente[] serpientes, Serpiente serpiente) {
+        serpiente.setDelay(50);
     }
+
+    @Override
+    Sorpresas conseguirSorpresaAleatoria(Tablero tablero){
+        return null;
+    }
+
 
     /**
      * Retorna la imagen de la sorpresa guardada en la carpeta imgs

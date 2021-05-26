@@ -24,9 +24,14 @@ public class BloqueTrampa extends Sorpresas{
     }
 
     @Override
-    void lanzar(ArrayList<Elemento> elemento, Serpiente[] serpientes, Serpiente serpiente) {
-        elemento.add(new Barrier(UNIDAD_TABLERO,ANCHO,ALTO, multiplayer));
+    void lanzar(ArrayList<Barrier> barriers, Serpiente[] serpientes, Serpiente serpiente) {
+        barriers.add(new Barrier(UNIDAD_TABLERO,ANCHO,ALTO, multiplayer));
 
+    }
+
+    @Override
+    Sorpresas conseguirSorpresaAleatoria(Tablero tablero) {
+        return null;
     }
 
     /**

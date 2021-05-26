@@ -31,9 +31,9 @@ public class Manzana extends Alimento{
     @Override
     void incremento(Color[] compararColor, Serpiente serpiente) {
         for(Color color: compararColor) {
-            if(this.color == color){serpiente.cuerpo += 2;}
+            if(this.color == color){serpiente.crecer(2);return;}
         }
-        serpiente.cuerpo += 1;
+        serpiente.crecer(1);
     }
 
     /**

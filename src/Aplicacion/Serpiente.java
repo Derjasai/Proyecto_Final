@@ -14,12 +14,13 @@ public class Serpiente implements Serializable {
     public int[] poscionY;
     public String nombre;
     public char direction;
-    public int cuerpo = 3;
+    private int cuerpo = 3;
     public Sorpresas sorpresaPendiente;
     public Color colorCabeza;
     public Color colorCuerpo;
     public boolean tomarAlimentoSiguiente = true;
     public boolean muerta = false;
+    private int delay = 175;
 
     /**
      * Constructor de la clase serpiente
@@ -105,10 +106,10 @@ public class Serpiente implements Serializable {
 
     /**
      * Decide si la serpiente esta en un estado invalido en el tablero
-     * @param elementos Lista de elementos del tablero
+     * @param barriers Lista de elementos del tablero
      * @param serpientes Serpientes en juego
      */
-    public void estaMuerta(ArrayList<Elemento> elementos, Serpiente[] serpientes){
+    public void estaMuerta(ArrayList<Barrier> barriers, Serpiente[] serpientes){
         if(this.cuerpo <= 0){muerta = true;}
         for(Serpiente serpiente: serpientes){
             if(serpiente != null){
@@ -125,11 +126,18 @@ public class Serpiente implements Serializable {
         if(this.poscionY[0] < 0) { muerta = true; }
         if(this.poscionY[0] >= ALTO){muerta = true;}
         
-        for (int i = 3; i < elementos.size(); i++) {
-            if(this.poscionX[0] == elementos.get(i).x && this.poscionY[0] == elementos.get(i).y){
-                elementos.remove(i);
+        for (int i = 0; i < barriers.size(); i++) {
+            if(this.poscionX[0] == barriers.get(i).x && this.poscionY[0] == barriers.get(i).y){
+                barriers.remove(i);
                 muerta = true;
             }
         }
+    }
+
+    public void setDelay(int newDelay){delay = newDelay;}
+    public void crecer(int crece){ cuerpo += crece; }
+    public int getCuerpo(){return cuerpo;}
+    public int getDelay(){
+        return delay;
     }
 }

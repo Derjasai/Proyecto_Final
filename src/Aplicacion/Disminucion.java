@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Clas eencargada de manejar la sorpresa Disminucion de velocidad
  */
-public class Disminucion extends Flechas{
+public class Disminucion extends Sorpresas {
 
     /**
      * Constructor de la clase Aumento
@@ -24,8 +24,14 @@ public class Disminucion extends Flechas{
     }
 
     @Override
-    void lanzar(ArrayList<Elemento> elemento, Serpiente[] serpientes, Serpiente serpiente) {
+    void lanzar(ArrayList<Barrier> barriers, Serpiente[] serpientes, Serpiente serpiente) {
+        System.out.println(serpienteActuar(serpientes,serpiente).nombre);
+        serpienteActuar(serpientes,serpiente).setDelay(300);
+    }
 
+    @Override
+    Sorpresas conseguirSorpresaAleatoria(Tablero tablero){
+        return null;
     }
 
     /**

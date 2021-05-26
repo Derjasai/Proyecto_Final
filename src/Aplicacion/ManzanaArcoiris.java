@@ -27,7 +27,7 @@ public class ManzanaArcoiris extends Alimento{
      */
     @Override
     void incremento(Color[] compararColor, Serpiente serpiente) {
-        serpiente.cuerpo += 3;
+        serpiente.crecer(3);
     }
 
 

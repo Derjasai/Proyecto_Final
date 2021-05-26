@@ -24,8 +24,13 @@ public class EstrellaFuego extends Sorpresas{
     }
 
     @Override
-    void lanzar(ArrayList<Elemento> elemento, Serpiente[] serpientes, Serpiente serpiente) {
+    void lanzar(ArrayList<Barrier> barriers, Serpiente[] serpientes, Serpiente serpiente) {
 
+    }
+
+    @Override
+    Sorpresas conseguirSorpresaAleatoria(Tablero tablero) {
+        return null;
     }
 
     /**

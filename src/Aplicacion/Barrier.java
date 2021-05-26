@@ -25,12 +25,12 @@ public class Barrier extends Elemento implements Serializable {
      * @return Imagen del elemento
      */
     public Image getImage(){
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File("imgs/barrier.png")); // la carga en una BufferedReade
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return img;
+            BufferedImage img = null;
+            try {
+                img = ImageIO.read(new File("imgs/barrier.png")); // la carga en una BufferedReade
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return img;
     }
 }

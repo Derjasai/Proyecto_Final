@@ -21,9 +21,24 @@ abstract class Sorpresas extends Elemento implements Serializable {
 
     /**
      * Metodo para cuando se lanza una sorpresa pendiente de una serpiente
-     * @param elemento Lista de elementos del tablero para modificar
+     * @param barriers Lista de barreras del tablero
      * @param serpientes Lista de serpientes en juego
      * @param serpiente Serpiente que lanza la sorpresa pendiente
      */
-    abstract void lanzar(ArrayList<Elemento> elemento, Serpiente[] serpientes, Serpiente serpiente);
+    abstract void lanzar(ArrayList<Barrier> barriers, Serpiente[] serpientes, Serpiente serpiente);
+
+    abstract Sorpresas conseguirSorpresaAleatoria(Tablero tablero);
+
+    public void cambiarPosicion(boolean cambiar){
+        if(cambiar){cambiarPosicion();}
+    }
+
+    protected Serpiente serpienteActuar(Serpiente[] serpientes, Serpiente serpiente){
+        if(multiplayer){
+            if(serpientes[0] == serpiente){
+                return serpientes[1];
+            }
+            else {return serpientes[0];}
+        }else {return serpiente;}
+    }
 }

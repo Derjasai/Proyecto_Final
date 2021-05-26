@@ -13,8 +13,8 @@ import Aplicacion.Juego;
 
 public class SnOOPeGUI extends JFrame{
 
-    private JButton unSoloJugador, jugadorVsJugador, jugadorVsMaquina;
-    public JPanel principal, panelJuego, configuraciones;
+    private JButton unSoloJugador, jugadorVsJugador, jugadorVsMaquina, records;
+    public JPanel principal, panelJuego, configuraciones, recordsPanel;
     public JMenuBar menuBar;
     public JMenu archivo;
     private JMenuItem nuevo,abrir,salir;
@@ -54,6 +54,7 @@ public class SnOOPeGUI extends JFrame{
         jugadorVsJugador.addActionListener(e->configuracionJuegoMultiplayer());
         nuevo.addActionListener(e->opcionNuevo());
         abrir.addActionListener(e->opcionAbrir());
+        records.addActionListener(e->records());
         guardarComo.setEnabled(false);
         salir.addActionListener(e -> opcionSalir());
     }
@@ -83,7 +84,6 @@ public class SnOOPeGUI extends JFrame{
         }
     }
 
-
     /**
      * Limpia y genera un nuevo automata
      */
@@ -108,6 +108,9 @@ public class SnOOPeGUI extends JFrame{
         validate();
     }
 
+    /**
+     * Hace visible la configuracion para el multijugador
+     */
     private void configuracionJuegoMultiplayer(){
         principal.setVisible(false);
         configuraciones = new ConfiguracionJuegoMultiplayer(this);
@@ -125,11 +128,13 @@ public class SnOOPeGUI extends JFrame{
         unSoloJugador = new JButton("Un Solo Jugador");
         jugadorVsJugador = new JButton("Jugador vs Jugador");
         jugadorVsMaquina = new JButton("Jugador vs IA");
-        selecciones.setLayout(new GridLayout(3,1,100,100));
+        records = new JButton("RECORDS");
+        selecciones.setLayout(new GridLayout(4,1,100,100));
 
         selecciones.add(unSoloJugador);
         selecciones.add(jugadorVsJugador);
         selecciones.add(jugadorVsMaquina);
+        selecciones.add(records);
 
         principal.add(Box.createHorizontalGlue());
         principal.add(selecciones);
@@ -159,14 +164,17 @@ public class SnOOPeGUI extends JFrame{
         this.setJMenuBar(menuBar);
     }
 
-    private Image getImage(){
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File("imgs/barrier.png")); // la carga en una BufferedReade
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return img;
+    /**
+     * Hace visible la seccion de records
+     */
+    private void records(){
+        principal.setVisible(false);
+        recordsPanel = new Records(principal);
+        recordsPanel.setVisible(true);
+        this.add(recordsPanel);
+        this.pack();
+        this.setLocationRelativeTo(null);
+        validate();
     }
 
     public static void main(String[] args){
